@@ -1,0 +1,925 @@
+<!doctype html>
+<html lang="cs">
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+	<script src="index.js" defer></script>
+	<link rel="stylesheet" href="index.css" />
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>
+			LeskDetail — mobilní detailing Pardubice a okolí | Vyjíždíme k vám
+		</title>
+		<meta
+			name="description"
+			content="Profesionální mobilní detailing v Pardubicích a okolí. Ruční mytí, obnova zažloutlých světlometů, hloubkové čištění a tepování interiéru. Přijedeme k vám domů nebo do firmy."
+		/>
+		<meta
+			property="og:title"
+			content="LeskDetail — mobilní detailing Pardubice a okolí"
+		/>
+		<meta
+			property="og:description"
+			content="Profesionální péče o auto přímo u vás. Ruční mytí, obnova světlometů, tepování interiéru. Pardubice a celý Pardubický kraj."
+		/>
+		<meta property="og:type" content="website" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@300;400;500;600&display=swap"
+			rel="stylesheet"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+		/>
+	</head>
+	<body>
+		<header id="site-header">
+			<div class="wrap nav">
+				<a href="#top" class="logo" aria-label="LeskDetail — domů">
+					<span class="logo-mark">LD</span>
+					<span class="logo-text"
+						>LeskDetail<small>Mobilní detailing</small></span
+					>
+				</a>
+				<ul class="nav-links" id="nav-links">
+					<li><a href="#o-nas">O nás</a></li>
+					<li><a href="#sluzby">Služby</a></li>
+					<li><a href="#ceny">Ceny</a></li>
+					<li><a href="#oblast">Oblast</a></li>
+					<li><a href="#faq">Časté dotazy</a></li>
+					<li><a href="#kontakt">Kontakt</a></li>
+				</ul>
+				<div class="nav-cta">
+					<a href="tel:+420734676271" class="nav-phone">+420 734 676 271</a>
+					<a href="#kontakt" class="btn btn-primary">Nezávazná poptávka</a>
+					<button
+						class="burger"
+						id="burger"
+						aria-label="Otevřít menu"
+						aria-expanded="false"
+					>
+						<span></span><span></span><span></span>
+					</button>
+				</div>
+			</div>
+		</header>
+
+		<!-- HERO -->
+		<section class="hero" id="top">
+			<div class="hero-bg">
+				<img
+					class="hero-slide is-active"
+					src="images/octavia_3_inside_ft.jpg"
+					alt=""
+					aria-hidden="true"
+				/>
+				<img
+					class="hero-slide"
+					src="images/octavia_3_ft.jpg"
+					alt=""
+					aria-hidden="true"
+				/>
+				<img
+					class="hero-slide"
+					src="images/karoq_ft.jpg"
+					alt=""
+					aria-hidden="true"
+				/>
+				<img
+					class="hero-slide"
+					src="images/karoq_trunk_ft.jpg"
+					alt=""
+					aria-hidden="true"
+				/>
+			</div>
+			<div class="wrap">
+				<div class="hero-inner">
+					<div class="eyebrow" style="color: var(--amber)">
+						Pardubice a celý Pardubický kraj
+					</div>
+					<h1>Detailing, který <em>přijede k vám</em></h1>
+					<p class="lead">
+						Profesionální péče o lak i interiér vozu přímo u vás doma, v práci
+						nebo v garáži. Přivezeme techniku i zkušenosti — vy jen připojíte
+						zásuvku.
+					</p>
+					<div class="hero-actions">
+						<a href="#kontakt" class="btn btn-primary"
+							>Chci nezávaznou poptávku</a
+						>
+						<a href="#sluzby" class="btn btn-ghost">Prohlédnout služby</a>
+					</div>
+					<div class="hero-badges">
+						<div class="hero-badge">
+							<svg
+								width="18"
+								height="18"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<path d="M20 6L9 17l-5-5" />
+							</svg>
+							Vyjíždíme k vám
+						</div>
+						<div class="hero-badge">
+							<svg
+								width="18"
+								height="18"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<path d="M20 6L9 17l-5-5" />
+							</svg>
+							Stačí jedna zásuvka
+						</div>
+						<div class="hero-badge">
+							<svg
+								width="18"
+								height="18"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<path d="M20 6L9 17l-5-5" />
+							</svg>
+							Prémiová kosmetika
+						</div>
+						<div class="hero-badge">
+							<svg
+								width="18"
+								height="18"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<path d="M20 6L9 17l-5-5" />
+							</svg>
+							Fakturace pro firmy
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="scroll-hint">Posuňte níž</div>
+		</section>
+
+		<!-- ABOUT -->
+		<section class="about" id="o-nas">
+			<div class="wrap about-grid">
+				<div class="about-copy reveal">
+					<div class="eyebrow">Kdo jsem</div>
+					<h2>Auto jako nové — bez cesty do myčky</h2>
+					<p>
+						Jsem mobilní detailer z Pardubic. Místo velkého studia s dlouhými
+						objednacími lhůtami jsem se vydal jinou cestou:
+						<strong>přivezu kompletní detailing až k vám</strong>. Stačí zásuvka
+						a místo, kde lze bezpečně stát s vozem — dvůr, garáž, firemní
+						parkoviště.
+					</p>
+					<p>
+						Pracuju s prémiovou chemií <strong>Koch Chemie</strong>,
+						profesionálním vysavačem a extraktorem na tepování interiéru. K
+						výjezdu mi stačí přístup k jedné zásuvce — vodu ani jiné zázemí
+						řešit nemusíte. Ke každému vozu přistupujeme individuálně — nejdřív
+						prohlédneme stav a teprve pak navrhneme rozsah prací.
+					</p>
+					<p>
+						Obsluhuji Pardubice, Chrudim, Hradec Králové i menší města a obce v
+						celém kraji. Pro firmy zajišťujeme pravidelnou péči o flotily.
+					</p>
+					<div class="about-stats">
+						<div class="stat"><b>1+</b><span>let praxe</span></div>
+						<div class="stat"><b>15+</b><span>upravených vozů</span></div>
+						<div class="stat"><b>100 %</b><span>práce u vás</span></div>
+					</div>
+				</div>
+				<div class="about-media reveal">
+					<img
+						src="images/tools.jpg"
+						alt="BMW E91 Touring s vybavením na mobilní detailing před výjezdem"
+					/>
+					<div class="tag">Přijedu s vlastním vybavením</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- SERVICES -->
+		<section class="services" id="sluzby">
+			<div class="wrap">
+				<div class="section-head reveal">
+					<div class="eyebrow">Služby</div>
+					<h2>Co pro vaše auto udělám</h2>
+					<p>
+						Od rychlé údržby po hloubkové čištění interiéru. Vše na místě u vás,
+						s profesionální technikou a bez kompromisů.
+					</p>
+				</div>
+				<div class="svc-grid">
+					<!-- <article class="svc reveal">
+						<span class="svc-num">00</span>
+						<h3>Mytí a dekontaminace</h3>
+						<p>
+							Ruční mytí dvoufázovou metodou, odstranění asfaltu, hmyzu a
+							železitých částic z laku i kol.
+						</p>
+						<ul>
+							<li>Předmytí pěnou</li>
+							<li>Ruční mytí rukavicí</li>
+							<li>Čištění kol a podběhů</li>
+						</ul>
+					</article> -->
+					<article class="svc reveal">
+						<span class="svc-num">01</span>
+						<h3>Obnova zažloutlých světlometů</h3>
+						<p>
+							Odstranění zažloutnutí a zákalu plastových světlometů. Vrátíme jim
+							průhlednost, lesk i lepší svítivost.
+						</p>
+						<ul>
+							<li>Broušení a leštění plastu</li>
+							<li>Odstranění oxidace a zákalu</li>
+							<li>Ochranný nátěr proti UV</li>
+						</ul>
+					</article>
+					<article class="svc reveal">
+						<span class="svc-num">02</span>
+						<h3>Hloubkové čištění interiéru</h3>
+						<p>
+							Vysávání, čištění plastů, palubní desky, výdechů a všech spár
+							prémiovou chemií Koch Chemie.
+						</p>
+						<ul>
+							<li>Čištění plastů a kůže</li>
+							<li>Vysávání a detailing spár</li>
+							<li>Odstranění pachů</li>
+						</ul>
+					</article>
+					<article class="svc reveal">
+						<span class="svc-num">03</span>
+						<h3>Tepování sedadel a koberců</h3>
+						<p>
+							Extrakční čištění textilních sedadel, koberců a kufru horkou
+							vodou. Odstranění skvrn z hlubokých vrstev.
+						</p>
+						<ul>
+							<li>Extrakce horkou vodou</li>
+							<li>Odstranění skvrn</li>
+							<li>Dezinfekce interiéru</li>
+						</ul>
+					</article>
+					<article class="svc reveal">
+						<span class="svc-num">04</span>
+						<h3>Mytí motorového prostoru</h3>
+						<p>
+							Šetrné čištění motorového prostoru bez rizika pro elektroniku. Vůz
+							vypadá dobře i po otevření kapoty.
+						</p>
+						<ul>
+							<li>Odmaštění a oplach</li>
+							<li>Ošetření plastů</li>
+							<li>Kontrola po práci</li>
+						</ul>
+					</article>
+					<article class="svc reveal">
+						<span class="svc-num">05</span>
+						<h3>Příprava na prodej</h3>
+						<p>
+							Balíček, který zvýší prodejní cenu vozu. Interiér, motorový
+							prostor i světlomety.
+						</p>
+						<ul>
+							<li>Hloubkové čištění interiéru</li>
+							<li>Tepování interiéru</li>
+							<li>Obnova světlometů</li>
+							<li>Fotky před / po</li>
+						</ul>
+					</article>
+				</div>
+			</div>
+		</section>
+
+		<!-- PROCESS -->
+		<section class="process">
+			<div class="wrap">
+				<div class="section-head reveal">
+					<div class="eyebrow">Jak to probíhá</div>
+					<h2>Čtyři kroky k čistému autu</h2>
+					<p>
+						Jednoduchý proces bez zbytečného čekání. Od poptávky k hotovému vozu
+						obvykle do několika dní - a často i během několika hodin.
+					</p>
+				</div>
+				<div class="steps">
+					<div class="step reveal">
+						<div class="step-num">01</div>
+						<h3>Poptávka</h3>
+						<p>
+							Napíšete nám nebo zavoláte. Zeptáme se na typ vozu, stav a co od
+							detailingu očekáváte.
+						</p>
+					</div>
+					<div class="step reveal">
+						<div class="step-num">02</div>
+						<h3>Nabídka a termín</h3>
+						<p>
+							Pošleme konkrétní cenu a domluvíme termín, který vám sedne —
+							včetně víkendů.
+						</p>
+					</div>
+					<div class="step reveal">
+						<div class="step-num">03</div>
+						<h3>Přijedeme k vám</h3>
+						<p>
+							Přivezeme veškerou techniku. Stačí nám jedna zásuvka — o nic
+							dalšího se nestaráte.
+						</p>
+					</div>
+					<div class="step reveal">
+						<div class="step-num">04</div>
+						<h3>Předání vozu</h3>
+						<p>
+							Projdeme s vámi výsledek, vysvětlíme údržbu a předáme klíče.
+							Platba hotově nebo fakturou.
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- PRICING -->
+		<section class="pricing" id="ceny">
+			<div class="wrap">
+				<div class="section-head center reveal">
+					<div class="eyebrow">Ceník</div>
+					<h2>Transparentní ceny</h2>
+					<p>
+						Orientační ceny pro osobní vozy do střední třídy. Konečnou cenu
+						potvrdíme po prohlídce vozu — bez překvapení.
+					</p>
+				</div>
+				<div class="price-flex">
+					<!-- <div class="price reveal">
+						<div class="price-name">Exteriér</div>
+						<div class="price-amount">1 490 <small>Kč</small></div>
+						<p class="price-desc">Rychlá údržba laku pro vůz v dobrém stavu.</p>
+						<ul class="price-list">
+							<li>Ruční mytí a dekontaminace</li>
+							<li>Čištění kol a podběhů</li>
+							<li>Sušení mikrovláknem</li>
+							<li>Ošetření pneumatik</li>
+							<li>Orientačně 2-3 hodiny</li>
+						</ul>
+						<a href="#kontakt" class="btn btn-dark">Objednat</a>
+					</div> -->
+					<!-- <div class="price featured reveal">
+						<div class="badge-top">Nejčastější volba</div>
+						<div class="price-name">Komplet</div>
+						<div class="price-amount">3 490 <small>Kč</small></div>
+						<p class="price-desc">Exteriér i interiér v jednom balíčku.</p>
+						<ul class="price-list">
+							<li>Vše z balíčku Exteriér</li>
+							<li>Hloubkové čištění interiéru</li>
+							<li>Čištění plastů a kůže</li>
+							<li>Tepování sedadel a koberců</li>
+							<li>Orientačně 5-7 hodin</li>
+						</ul>
+						<a href="#kontakt" class="btn btn-primary">Objednat</a>
+					</div> -->
+
+					<!-- Běžné čištění interiéru -->
+					<div class="price reveal">
+						<div class="price-name">Běžné čištění interiéru</div>
+						<div class="price-amount">900 <small>Kč</small></div>
+						<p class="price-desc">
+							Kompletní základní úklid interiéru vozidla.
+						</p>
+						<ul class="price-list">
+							<li>Vysávání celého interiéru a zavazadlového prostoru</li>
+							<li>Čištění plastů a palubní desky</li>
+							<li>Čištění vnitřních částí dveří</li>
+							<li>Čištění vnitřních skel</li>
+							<li>Ošetření plastových povrchů</li>
+							<li>Orientačně 1,5-2,5 hodiny</li>
+						</ul>
+						<a href="#kontakt" class="btn btn-dark">Objednat</a>
+					</div>
+
+					<!-- Detailní čištění interiéru -->
+					<div class="price reveal">
+						<div class="price-name">Detailní čištění interiéru</div>
+						<div class="price-amount">1 200 <small>Kč</small></div>
+						<p class="price-desc">
+							Důkladné čištění interiéru včetně těžko dostupných míst.
+						</p>
+						<ul class="price-list">
+							<li>Vše ze základního čištění</li>
+							<li>Čištění ventilačních otvorů a jejich lamel</li>
+							<li>Detailní čištění spár, záhybů a těžko dostupných míst</li>
+							<li>Čištění gumového těsnění a dveřních průchodek</li>
+							<li>Čištění dveřních pantů, omezovačů a zámků</li>
+							<li>Čištění pomocí jemných detailingových štětců</li>
+							<li>Orientačně 2,5-3,5 hodiny</li>
+						</ul>
+						<a href="#kontakt" class="btn btn-dark">Objednat</a>
+					</div>
+
+					<!-- Hloubkové čištění interiéru -->
+					<div class="price reveal">
+						<div class="price-name">Hloubkové čištění interiéru</div>
+						<div class="price-amount">1 490 <small>Kč</small></div>
+						<p class="price-desc">
+							Komplexní čištění interiéru včetně mokrého čištění textilních
+							povrchů.
+						</p>
+						<ul class="price-list">
+							<li>Vše z detailního čištění</li>
+							<li>Vysávání celého vozu</li>
+							<li>Tepování sedadel a koberců</li>
+							<li>Hloubkové čištění textilních povrchů</li>
+							<li>Odstranění pachů</li>
+							<li>Ošetření povrchů prémiální autokosmetikou Koch Chemie</li>
+							<li>Orientačně 3-4 hodiny</li>
+						</ul>
+						<a href="#kontakt" class="btn btn-dark">Objednat</a>
+					</div>
+
+					<!-- Tepování sedadel a koberců -->
+					<div class="price reveal">
+						<div class="price-name">Tepování sedadel a koberců</div>
+						<div class="price-amount">990 <small>Kč</small></div>
+						<p class="price-desc">Tepování sedadel a koberců</p>
+						<ul class="price-list">
+							<li>Extrakce horkou vodou</li>
+							<li>Odstranění skvrn</li>
+							<li>Dezinfekce interiéru</li>
+							<li>Orientačně 2 hodiny</li>
+						</ul>
+						<a href="#kontakt" class="btn btn-dark">Objednat</a>
+					</div>
+
+					<!-- Leštění světlometů -->
+					<div class="price reveal">
+						<div class="price-name">Leštění světlometů</div>
+						<div class="price-amount">
+							350
+							<small>Kč/<i>kus</i></small>
+						</div>
+						<p class="price-desc">Obnova zažloutlých světlometů</p>
+						<ul class="price-list">
+							<li>Broušení a leštění plastu</li>
+							<li>Odstranění oxidace a zákalu</li>
+							<li>Ochranný nátěr proti UV</li>
+							<li>Orientačně 30 minut na jeden světlomet</li>
+						</ul>
+						<a href="#kontakt" class="btn btn-dark">Objednat</a>
+					</div>
+
+					<!-- Mytí motorového prostoru -->
+					<div class="price reveal">
+						<div class="price-name">Mytí motorového prostoru</div>
+						<div class="price-amount">790 <small>Kč</small></div>
+						<p class="price-desc">Mytí motorového prostoru</p>
+						<ul class="price-list">
+							<li>Odmaštění a oplach</li>
+							<li>Ošetření plastů</li>
+							<li>Kontrola po práci</li>
+							<li>Orientačně 1 hodina</li>
+						</ul>
+						<a href="#kontakt" class="btn btn-dark">Objednat</a>
+					</div>
+
+					<!-- Příprava na prodej -->
+					<div class="price reveal">
+						<div class="price-name">Příprava na prodej</div>
+						<div class="price-amount">1 990 <small>Kč</small></div>
+						<p class="price-desc">Příprava na prodej</p>
+						<ul class="price-list">
+							<li>Hloubkové čištění interiéru</li>
+							<li>Tepování sedadel a koberců</li>
+							<li>Obnova světlometů</li>
+							<li>Fotky před / po</li>
+							<li>Orientačně 4-5 hodin</li>
+						</ul>
+						<a href="#kontakt" class="btn btn-dark">Objednat</a>
+					</div>
+				</div>
+
+				<!-- POZNÁMKA K CENÁM -->
+				<p class="price-note">
+					Ceny jsou orientační a liší se podle velikosti a stavu vozu. Obnova
+					zažloutlých světlometů od 700 Kč za pár. Pro vozy nad 5 m, SUV a
+					dodávky naceníme individuálně.
+				</p>
+			</div>
+		</section>
+
+		<!-- COVERAGE -->
+		<section class="coverage" id="oblast">
+			<div class="wrap">
+				<div class="section-head reveal">
+					<div class="eyebrow">Kde působím</div>
+					<h2>Pardubice a celý kraj</h2>
+					<p>
+						Vyjíždím do celého Pardubického kraje a přilehlého okolí. Do 20 km
+						od Pardubic je doprava zdarma.
+					</p>
+				</div>
+
+				<div class="cov-grid">
+					<!-- CITY LIST -->
+					<div class="cov-locations reveal">
+						<h3>Oblast působnosti</h3>
+
+						<div id="coverage-list" class="cov-list">
+							<button class="cov-city" data-city="Pardubice">Pardubice</button>
+							<button class="cov-city" data-city="Chrudim">Chrudim</button>
+							<button class="cov-city" data-city="Hradec Králové">
+								Hradec Králové
+							</button>
+							<button class="cov-city" data-city="Lázně Bohdaneč">
+								Lázně Bohdaneč
+							</button>
+							<button class="cov-city" data-city="Sezemice">Sezemice</button>
+							<button class="cov-city" data-city="Přelouč">Přelouč</button>
+							<button class="cov-city" data-city="Holice">Holice</button>
+							<button class="cov-city" data-city="Dašice">Dašice</button>
+							<button class="cov-city" data-city="Vysoké Mýto">
+								Vysoké Mýto
+							</button>
+							<button class="cov-city" data-city="Choceň">Choceň</button>
+							<button class="cov-city" data-city="Ústí nad Orlicí">
+								Ústí nad Orlicí
+							</button>
+							<button class="cov-city" data-city="Česká Třebová">
+								Česká Třebová
+							</button>
+							<button class="cov-city" data-city="Litomyšl">Litomyšl</button>
+							<button class="cov-city" data-city="Svitavy">Svitavy</button>
+							<button class="cov-city" data-city="Moravská Třebová">
+								Moravská Třebová
+							</button>
+							<button class="cov-city" data-city="Polička">Polička</button>
+							<button class="cov-city" data-city="Skuteč">Skuteč</button>
+							<button class="cov-city" data-city="Hlinsko">Hlinsko</button>
+							<button class="cov-city" data-city="Třemošnice">
+								Třemošnice
+							</button>
+							<button class="cov-city" data-city="Nasavrky">Nasavrky</button>
+							<button class="cov-city" data-city="Chvaletice">
+								Chvaletice
+							</button>
+							<button class="cov-city" data-city="Žamberk">Žamberk</button>
+						</div>
+
+						<p class="cov-note">
+							Nenašli jste svoji obec? Napište mi — dojezd mimo uvedenou oblast
+							rád domluvím individuálně.
+						</p>
+					</div>
+
+					<!-- INTERACTIVE MAP -->
+					<div class="cov-map-wrap reveal">
+						<div id="coverage-map"></div>
+						<div class="cov-selected">
+							<span>Vybraná lokalita</span>
+							<strong id="selected-city">Pardubice</strong>
+						</div>
+					</div>
+				</div>
+
+				<!-- BUSINESS INFORMATION -->
+				<div class="cov-card reveal">
+					<h3>Mobilní detailing až k vám</h3>
+					<p>
+						Přijedu přímo k vašemu domu nebo na místo, kde máte zaparkované
+						auto. Podmínky a dostupnost služeb domluvíme předem.
+					</p>
+					<a href="#kontakt" class="btn btn-primary"> Nezávazně poptat </a>
+				</div>
+			</div>
+		</section>
+
+		<!-- GALLERY -->
+		<section class="gallery">
+			<div class="wrap">
+				<div class="section-head reveal">
+					<div class="eyebrow">Ukázky práce</div>
+					<h2>Výsledky, které mluví za nás</h2>
+					<p>Pár ukázek z našich zakázek v Pardubicích a okolí.</p>
+				</div>
+				<div class="gal-grid">
+					<figure class="reveal">
+						<img
+							src="images/porshe_cayenne_polishing.jpg"
+							alt="Obnova zažloutlého světlometu — levá část již vyleštěná, pravá ještě zažloutlá"
+						/>
+						<figcaption>Obnova světlometů</figcaption>
+					</figure>
+					<figure class="reveal">
+						<img
+							src="images/tepovani.jpg"
+							alt="Tepování textilního sedadla extraktorem při čištění interiéru"
+						/>
+						<figcaption>Tepování interiéru</figcaption>
+					</figure>
+					<!-- <figure class="reveal">
+						<img
+							src="images/hand_wash.png"
+							alt="Ruční mytí vozu rukavicí s pěnou"
+						/>
+						<figcaption>Ruční mytí</figcaption>
+					</figure> -->
+					<figure class="reveal">
+						<img
+							src="images/tools.jpg"
+							alt="BMW E91 Touring s detailingovým vybavením před výjezdem"
+						/>
+						<figcaption>Výjezd k zákazníkovi</figcaption>
+					</figure>
+				</div>
+			</div>
+		</section>
+
+		<!-- FAQ -->
+		<section class="faq" id="faq">
+			<div class="wrap faq-grid">
+				<div class="reveal">
+					<div class="eyebrow">Časté dotazy</div>
+					<h2
+						style="
+							font-size: clamp(32px, 4vw, 48px);
+							color: var(--ink);
+							margin-bottom: 18px;
+						"
+					>
+						Na co se nás ptáte
+					</h2>
+					<p style="color: var(--muted)">
+						Nenašli jste odpověď? Zavolejte nebo napište — odpovídáme obvykle do
+						pár hodin.
+					</p>
+				</div>
+				<div class="faq-list reveal">
+					<details>
+						<summary>Potřebuji vlastní vodu a elektřinu?</summary>
+						<p>
+							Vodu nepotřebujete — pracujeme bez přívodu vody. Stačí nám přístup
+							k jedné běžné zásuvce 230 V, ze které napájíme stroje. Pokud
+							zásuvka není k dispozici, dejte nám vědět předem a domluvíme se na
+							řešení.
+						</p>
+					</details>
+					<details>
+						<summary>Kde všude můžete pracovat?</summary>
+						<p>
+							Potřebujeme bezpečné místo, kde lze s vozem stát a mít kolem něj
+							přístup ze všech stran — dvůr, garáž, firemní parkoviště nebo
+							klidná ulice. Při objednávce to krátce probereme.
+						</p>
+					</details>
+					<details>
+						<summary>Jak dlouho detailing trvá?</summary>
+						<p>
+							Záleží na balíčku. Exteriér obvykle 2-3 hodiny, interiér 3-4
+							hodiny, kompletní balíček 5-7 hodin. Obnova světlometů zabere
+							přibližně hodinu. Přesný čas upřesníme při nacenění.
+						</p>
+					</details>
+					<details>
+						<summary>Odstraníte zažloutlé světlomety?</summary>
+						<p>
+							Ano, obnova zažloutlých a zakalených plastových světlometů je
+							samostatná služba. Světlomet zbrousíme, vyleštíme a ošetříme
+							ochranným nátěrem proti UV, aby zůstal čirý co nejdéle. Výsledek
+							je vidět okamžitě a zlepší se i svítivost.
+						</p>
+					</details>
+					<details>
+						<summary>S jakou chemií pracujete?</summary>
+						<p>
+							Používáme prémiovou profesionální chemii
+							<strong>Koch Chemie</strong>, kvalitní mikrovlákna a profesionální
+							vysavač s extraktorem na tepování. Díky tomu čistíme šetrně, ale
+							důkladně — bez agresivních prostředků, které ničí plasty nebo
+							textil.
+						</p>
+					</details>
+					<details>
+						<summary>Jak mohu zaplatit?</summary>
+						<p>
+							Hotově, kartou nebo převodem. Firmám vystavujeme fakturu se
+							splatností. Cenu potvrdíme předem, žádné skryté poplatky.
+						</p>
+					</details>
+					<details>
+						<summary>Co když bude pršet?</summary>
+						<p>
+							Práci přesuneme na jiný termín, nebo ji provedeme v krytém
+							prostoru, pokud je k dispozici. Vždy se domluvíme tak, aby
+							výsledek nebyl ohrožen.
+						</p>
+					</details>
+				</div>
+			</div>
+		</section>
+
+		<!-- CONTACT -->
+		<section class="contact" id="kontakt">
+			<div class="wrap contact-grid">
+				<div class="reveal">
+					<div class="eyebrow">Kontakt</div>
+					<h2>Napište nám</h2>
+					<p class="contact-intro">
+						Pošlete poptávku nebo zavolejte. Ozveme se obvykle do několika hodin
+						s konkrétní cenou a volným termínem.
+					</p>
+					<div class="contact-items">
+						<div class="c-item">
+							<div class="c-icon">
+								<svg
+									width="20"
+									height="20"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="1.8"
+								>
+									<path
+										d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"
+									/>
+								</svg>
+							</div>
+							<div>
+								<b>Telefon</b>
+								<a href="tel:+420734676271">+420 734 676 271</a>
+							</div>
+						</div>
+						<div class="c-item">
+							<div class="c-icon">
+								<svg
+									width="20"
+									height="20"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="1.8"
+								>
+									<rect x="2" y="4" width="20" height="16" rx="2" />
+									<path d="m2 7 10 6 10-6" />
+								</svg>
+							</div>
+							<div>
+								<b>E-mail</b>
+								<a href="mailto:info@leskdetail.cz">info@leskdetail.cz</a>
+							</div>
+						</div>
+						<div class="c-item">
+							<div class="c-icon">
+								<svg
+									width="20"
+									height="20"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="1.8"
+								>
+									<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+									<circle cx="12" cy="10" r="3" />
+								</svg>
+							</div>
+							<div>
+								<b>Působnost</b>
+								<span>Pardubice a Pardubický kraj</span>
+							</div>
+						</div>
+					</div>
+					<div class="hours">
+						<b>Provozní doba:</b> Po-Pá 8:00-19:00 · So 9:00-16:00 · Ne po
+						domluvě<br />
+						Výjezdy mimo pracovní dobu možné na základě dohody.
+					</div>
+				</div>
+
+				<form id="contact-form" novalidate>
+					<h3>Nezávazná poptávka</h3>
+					<p class="form-sub">
+						Vyplňte pár údajů a my se vám ozveme s nabídkou.
+					</p>
+					<div class="field-row">
+						<div class="field">
+							<label for="name">Jméno a příjmení *</label>
+							<input
+								type="text"
+								id="name"
+								name="name"
+								required
+								placeholder="Jan Novák"
+							/>
+						</div>
+						<div class="field">
+							<label for="phone">Telefon *</label>
+							<input
+								type="tel"
+								id="phone"
+								name="phone"
+								required
+								placeholder="+420 734 676 271"
+							/>
+						</div>
+					</div>
+					<div class="field">
+						<label for="email">E-mail</label>
+						<input
+							type="email"
+							id="email"
+							name="email"
+							placeholder="jan@email.cz"
+						/>
+					</div>
+					<div class="field-row">
+						<div class="field">
+							<label for="car">Vozidlo</label>
+							<input
+								type="text"
+								id="car"
+								name="car"
+								placeholder="Škoda Octavia, 2019"
+							/>
+						</div>
+						<div class="field">
+							<label for="service">Služba</label>
+							<select id="service" name="service">
+								<option>Exteriér — 1 490 Kč</option>
+								<option selected>Komplet — 3 490 Kč</option>
+								<option>Interiér — 1 990 Kč</option>
+								<option>Obnova světlometů — od 890 Kč</option>
+								<option>Příprava na prodej</option>
+								<option>Firemní flotila</option>
+								<option>Nevím, poraďte mi</option>
+							</select>
+						</div>
+					</div>
+					<div class="field">
+						<label for="place">Místo výjezdu</label>
+						<input
+							type="text"
+							id="place"
+							name="place"
+							placeholder="Pardubice"
+						/>
+					</div>
+					<div class="field">
+						<label for="message">Zpráva</label>
+						<textarea
+							id="message"
+							name="message"
+							placeholder="Popište stav vozu a co byste potřebovali…"
+						></textarea>
+					</div>
+					<button type="submit" class="btn btn-primary">
+						Odeslat poptávku
+					</button>
+					<p class="form-note">
+						Odesláním se otevře váš e-mailový klient s předvyplněnou zprávou —
+						stačí ji potvrdit. Vaše údaje nikam neukládáme.
+					</p>
+					<div class="form-status" id="form-status" role="status"></div>
+				</form>
+			</div>
+		</section>
+
+		<footer>
+			<div class="wrap">
+				<div class="foot-top">
+					<a href="#top" class="logo" aria-label="LeskDetail">
+						<span class="logo-mark">LD</span>
+						<span class="logo-text"
+							>LeskDetail<small>Mobilní detailing</small></span
+						>
+					</a>
+					<div class="foot-links">
+						<a href="#o-nas">O nás</a>
+						<a href="#sluzby">Služby</a>
+						<a href="#ceny">Ceny</a>
+						<a href="#oblast">Oblast</a>
+						<a href="#faq">FAQ</a>
+						<a href="#kontakt">Kontakt</a>
+					</div>
+				</div>
+				<div class="foot-bottom">
+					<span
+						>© <span id="year">2026</span> LeskDetail — mobilní detailing
+						Pardubice a okolí</span
+					>
+					<span>Vytvořeno s důrazem na detail.</span>
+				</div>
+			</div>
+		</footer>
+	</body>
+</html>
