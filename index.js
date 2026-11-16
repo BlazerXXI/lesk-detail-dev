@@ -16,6 +16,66 @@ if (burger && navLinks) {
 	});
 }
 
+// !!! TEMPORARY translation !!!
+// English translation button
+(() => {
+	const header = document.querySelector("header");
+	if (!header) return;
+	const translateButton = document.createElement("button");
+	translateButton.type = "button";
+	translateButton.textContent = "EN";
+	translateButton.setAttribute("aria-label", "Translate page to English");
+	translateButton.style.cssText =
+		"cursor:pointer;margin:8px;padding:8px 12px;border:1px solid currentColor;border-radius:4px;background:transparent;color:inherit;font:inherit";
+	const buttonHost = navLinks || header.querySelector("nav") || header;
+	buttonHost.appendChild(translateButton);
+
+	const widget = document.createElement("div");
+	widget.id = "google_translate_element";
+	widget.style.display = "none";
+	document.body.appendChild(widget);
+
+	let widgetReady = false;
+	let scriptLoading = false;
+	let translationRequested = false;
+	const applyEnglish = () => {
+		const languageSelect = document.querySelector(".goog-te-combo");
+		if (languageSelect) {
+			languageSelect.value = "en";
+			languageSelect.dispatchEvent(new Event("change", { bubbles: true }));
+			translationRequested = false;
+		} else if (translationRequested) {
+			window.setTimeout(applyEnglish, 250);
+		}
+	};
+
+	window.googleTranslateElementInit = function () {
+		new window.google.translate.TranslateElement(
+			{ pageLanguage: "cs", includedLanguages: "en", autoDisplay: false },
+			"google_translate_element",
+		);
+		widgetReady = true;
+		if (translationRequested) applyEnglish();
+	};
+
+	translateButton.addEventListener("click", function () {
+		translationRequested = true;
+		if (widgetReady) {
+			applyEnglish();
+		} else if (!scriptLoading) {
+			scriptLoading = true;
+			const script = document.createElement("script");
+			script.src =
+				"https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+			script.onerror = function () {
+				scriptLoading = false;
+				translationRequested = false;
+			};
+			document.head.appendChild(script);
+		}
+	});
+})();
+
 // Hero slider
 (() => {
 	const slides = document.querySelectorAll("#top .hero-slide");
