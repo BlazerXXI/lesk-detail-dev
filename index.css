@@ -878,10 +878,10 @@ section {
 }
 
 .cov-marker.selected {
-	background: #e49a23;
+	background: #1eaa75;
 	border: 3px solid #fff;
 	box-shadow:
-		0 0 0 7px rgba(228, 154, 35, 0.3),
+		0 0 0 7px rgba(30, 170, 117, 0.3),
 		0 2px 10px rgba(0, 0, 0, 0.4);
 }
 
