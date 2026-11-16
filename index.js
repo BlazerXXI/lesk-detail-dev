@@ -35,27 +35,23 @@ if (y) {
 }
 
 // Scroll reveal
-var items = document.querySelectorAll(".reveal");
-if ("IntersectionObserver" in window) {
-	var io = new IntersectionObserver(
-		function (entries) {
-			entries.forEach(function (e) {
-				if (e.isIntersecting) {
-					e.target.classList.add("in");
-					io.unobserve(e.target);
-				}
-			});
-		},
-		{ threshold: 0.12, rootMargin: "0px 0px -40px 0px" },
-	);
-	items.forEach(function (el) {
-		io.observe(el);
+const revealObserver = new IntersectionObserver(
+	(entries, observer) => {
+		entries.forEach((entry) => {
+			if (entry.isIntersecting) {
+				entry.target.classList.add("in");
+				observer.unobserve(entry.target);
+			}
+		});
+	},
+	{ threshold: 0.1 },
+);
+const observeReveals = (root = document) => {
+	root.querySelectorAll(".reveal:not(.in)").forEach((element) => {
+		revealObserver.observe(element);
 	});
-} else {
-	items.forEach(function (el) {
-		el.classList.add("in");
-	});
-}
+};
+observeReveals();
 
 // Choose city
 
@@ -247,6 +243,31 @@ var placeInput = document.getElementById("place");
 if (citySelect && placeInput) {
 	placeInput.value = citySelect;
 }
+const select = document.getElementById("service");
+
+fetch("./data.json")
+	.then((response) => {
+		if (!response.ok) throw new Error("Failed to load data.json");
+		return response.json();
+	})
+	.then((data) => {
+		const catalog = Array.isArray(data) ? data : data.catalog || [];
+		catalog.forEach(({ id, name, price }) => {
+			const option = document.createElement("option");
+			option.value = id;
+			option.textContent = `${name} — ${price}`;
+			select.appendChild(option);
+		});
+	})
+	.catch((error) => console.error(error));
+
+document.querySelectorAll("[data-service]").forEach((button) => {
+	button.addEventListener("click", () => {
+		console.log("button.dataset.service: ", button.dataset.service);
+		select.value = button.dataset.service;
+	});
+});
+
 if (form) {
 	form.addEventListener("submit", function (ev) {
 		ev.preventDefault();

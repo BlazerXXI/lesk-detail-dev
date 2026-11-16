@@ -1,0 +1,101 @@
+[
+	{
+		"id": "basic-interior",
+		"name": "Běžné čištění interiéru",
+		"description": "Kompletní základní úklid interiéru vozidla",
+		"features": [
+			"Vysávání celého interiéru a zavazadlového prostoru",
+			"Čištění plastů a palubní desky",
+			"Čištění vnitřních částí dveří",
+			"Čištění vnitřních skel",
+			"Ošetření plastových povrchů",
+			"Orientačně 1,5-2,5 hodiny"
+		],
+		"price": "900",
+		"active": true
+	},
+	{
+		"id": "detailed-interior",
+		"name": "Detailní čištění interiéru",
+		"description": "Důkladné čištění interiéru včetně těžko dostupných míst.",
+		"features": [
+			"Vše ze základního čištění",
+			"Čištění ventilačních otvorů a jejich lamel",
+			"Detailní čištění spár, záhybů a těžko dostupných míst",
+			"Čištění gumového těsnění a dveřních průchodek",
+			"Čištění dveřních pantů, omezovačů a zámků",
+			"Čištění pomocí jemných detailingových štětců",
+			"Orientačně 2,5-3,5 hodiny"
+		],
+		"price": "1 200",
+		"active": true
+	},
+	{
+		"id": "deep-interior",
+		"name": "Hloubkové čištění interiéru",
+		"description": "Kompletní hloubkové čištění interiéru včetně tepování sedadel a koberců.",
+		"features": [
+			"Vše z detailního čištění",
+			"Tepování sedadel a koberců",
+			"Odstranění skvrn a nečistot z textilních povrchů",
+			"Čištění a ošetření kožených sedadel",
+			"Orientačně 3,5-5 hodin"
+		],
+		"price": "1 700",
+		"active": true
+	},
+	{
+		"id": "upholstery-cleaning",
+		"name": "Tepování sedadel a koberců",
+		"description": "Tepování sedadel a koberců s použitím profesionálního extrakčního stroje.",
+		"features": [
+			"Extrakce horkou vodou",
+			"Odstranění skvrn",
+			"Dezinfekce interiéru",
+			"Orientačně 2 hodiny"
+		],
+		"price": "od 1 100",
+		"active": true
+	},
+	{
+		"id": "engine-bay-cleaning",
+		"name": "Mytí motorového prostoru",
+		"description": "Mytí motorového prostoru s použitím profesionálních prostředků.",
+		"features": [
+			"Odmaštění a oplach",
+			"Ošetření plastů",
+			"Kontrola po práci",
+			"Orientačně 1 hodina"
+		],
+		"price": "790",
+		"active": true
+	},
+	{
+		"id": "headlight-polishing",
+		"name": "Leštění světlometů",
+		"description": "Leštění světlometů s použitím profesionálních prostředků. Cena je za pár.",
+		"features": [
+			"Broušení a leštění plastu",
+			"Odstranění oxidace a zákalu",
+			"Ochranný nátěr proti UV",
+			"Orientačně 1-2 hodiny"
+		],
+		"price": "700",
+		"active": true
+	},
+
+	{
+		"id": "sale-preparation",
+		"name": "Příprava na prodej",
+		"description": "Kompletní příprava vozidla na prodej včetně detailního čištění.",
+		"features": [
+			"Hloubkové čištění interiéru",
+			"Tepování sedadel a koberců",
+			"Obnova světlometů",
+			"Fotky před / po",
+			"Orientačně 4-5 hodin"
+		],
+		"price": "od 2 200",
+		"active": true
+	}
+]

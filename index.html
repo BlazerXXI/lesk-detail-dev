@@ -94,7 +94,7 @@
 				/>
 			</div>
 			<div class="wrap">
-				<div class="hero-inner">
+				<div class="hero-inner reveal">
 					<div class="eyebrow" style="color: var(--amber)">
 						Pardubice a celý Pardubický kraj
 					</div>
@@ -363,7 +363,7 @@
 						potvrdíme po prohlídce vozu — bez překvapení.
 					</p>
 				</div>
-				<div class="price-flex">
+				<div class="price-flex" id="services">
 					<!-- <div class="price reveal">
 						<div class="price-name">Exteriér</div>
 						<div class="price-amount">1 490 <small>Kč</small></div>
@@ -392,8 +392,50 @@
 						<a href="#kontakt" class="btn btn-primary">Objednat</a>
 					</div> -->
 
-					<!-- Běžné čištění interiéru -->
-					<div class="price reveal">
+					<script>
+						document.addEventListener("DOMContentLoaded", function () {
+							fetch("./data.json")
+								.then((response) => response.json())
+								.then((data) => {
+									const catalog = Array.isArray(data)
+										? data
+										: data.catalog || [];
+									catalog.forEach((item) => {
+										if (item) {
+											const services = document.querySelector("#services");
+											services.insertAdjacentHTML(
+												"beforeend",
+												`
+												<div class="price reveal" id="service">
+													<div class="price-name">${item.name || ""}</div>
+													<div class="price-amount">
+														${item.price || ""} <small>Kč</small>
+													</div>
+													<p class="price-desc">${item.description}</p>
+													<ul class="price-list">
+														${(Array.isArray(item.features) ? item.features : [])
+															.map((feature) => `<li>${feature}</li>`)
+															.join("")}
+														</ul>
+													<a
+														href="#kontakt"
+														id="service-order"
+														class="btn btn-dark"
+														data-service="${item.id || ""}"
+													>
+														Objednat
+													</a>
+												</div>`,
+											);
+											observeReveals(services);
+										}
+									});
+								})
+								.catch((error) => console.error(error));
+						});
+					</script>
+
+					<!-- <div class="price reveal">
 						<div class="price-name">Běžné čištění interiéru</div>
 						<div class="price-amount">900 <small>Kč</small></div>
 						<p class="price-desc">
@@ -407,10 +449,13 @@
 							<li>Ošetření plastových povrchů</li>
 							<li>Orientačně 1,5-2,5 hodiny</li>
 						</ul>
-						<a href="#kontakt" class="btn btn-dark">Objednat</a>
+						<a
+							href="#kontakt"
+							class="btn btn-dark"
+							data-service="basic-interior"
+							>Objednat</a
+						>
 					</div>
-
-					<!-- Detailní čištění interiéru -->
 					<div class="price reveal">
 						<div class="price-name">Detailní čištění interiéru</div>
 						<div class="price-amount">1 200 <small>Kč</small></div>
@@ -426,10 +471,14 @@
 							<li>Čištění pomocí jemných detailingových štětců</li>
 							<li>Orientačně 2,5-3,5 hodiny</li>
 						</ul>
-						<a href="#kontakt" class="btn btn-dark">Objednat</a>
+						<a
+							href="#kontakt"
+							class="btn btn-dark"
+							data-service="detailed-interior"
+							>Objednat</a
+						>
 					</div>
 
-					<!-- Hloubkové čištění interiéru -->
 					<div class="price reveal">
 						<div class="price-name">Hloubkové čištění interiéru</div>
 						<div class="price-amount">1 500-1 700 <small>Kč</small></div>
@@ -446,10 +495,11 @@
 							<li>Ošetření povrchů prémiální autokosmetikou Koch Chemie</li>
 							<li>Orientačně 3-4 hodiny</li>
 						</ul>
-						<a href="#kontakt" class="btn btn-dark">Objednat</a>
+						<a href="#kontakt" class="btn btn-dark" data-service="deep-interior"
+							>Objednat</a
+						>
 					</div>
 
-					<!-- Tepování sedadel a koberců -->
 					<div class="price reveal">
 						<div class="price-name">Tepování sedadel a koberců</div>
 						<div class="price-amount">od 1 000 <small>Kč</small></div>
@@ -460,10 +510,14 @@
 							<li>Dezinfekce interiéru</li>
 							<li>Orientačně 2 hodiny</li>
 						</ul>
-						<a href="#kontakt" class="btn btn-dark">Objednat</a>
+						<a
+							href="#kontakt"
+							class="btn btn-dark"
+							data-service="upholstery-cleaning"
+							>Objednat</a
+						>
 					</div>
 
-					<!-- Leštění světlometů -->
 					<div class="price reveal">
 						<div class="price-name">Leštění světlometů</div>
 						<div class="price-amount">
@@ -477,10 +531,14 @@
 							<li>Ochranný nátěr proti UV</li>
 							<li>Orientačně 30 minut na jeden světlomet</li>
 						</ul>
-						<a href="#kontakt" class="btn btn-dark">Objednat</a>
+						<a
+							href="#kontakt"
+							class="btn btn-dark"
+							data-service="headlight-polishing"
+							>Objednat</a
+						>
 					</div>
 
-					<!-- Mytí motorového prostoru -->
 					<div class="price reveal">
 						<div class="price-name">Mytí motorového prostoru</div>
 						<div class="price-amount">790 <small>Kč</small></div>
@@ -491,10 +549,14 @@
 							<li>Kontrola po práci</li>
 							<li>Orientačně 1 hodina</li>
 						</ul>
-						<a href="#kontakt" class="btn btn-dark">Objednat</a>
+						<a
+							href="#kontakt"
+							class="btn btn-dark"
+							data-service="engine-bay-cleaning"
+							>Objednat</a
+						>
 					</div>
 
-					<!-- Příprava na prodej -->
 					<div class="price reveal">
 						<div class="price-name">Příprava na prodej</div>
 						<div class="price-amount">od 2 200<small>Kč</small></div>
@@ -506,8 +568,13 @@
 							<li>Fotky před / po</li>
 							<li>Orientačně 4-5 hodin</li>
 						</ul>
-						<a href="#kontakt" class="btn btn-dark">Objednat</a>
-					</div>
+						<a
+							href="#kontakt"
+							class="btn btn-dark"
+							data-service="sale-preparation"
+							>Objednat</a
+						>
+					</div>-->
 				</div>
 
 				<!-- POZNÁMKA K CENÁM -->
@@ -855,13 +922,7 @@
 						<div class="field">
 							<label for="service">Služba</label>
 							<select id="service" name="service">
-								<option>Exteriér — 1 490 Kč</option>
-								<option selected>Komplet — 3 490 Kč</option>
-								<option>Interiér — 1 990 Kč</option>
-								<option>Obnova světlometů — od 890 Kč</option>
-								<option>Příprava na prodej</option>
-								<option>Firemní flotila</option>
-								<option>Nevím, poraďte mi</option>
+								<option value="">Vyberte službu</option>
 							</select>
 						</div>
 					</div>
