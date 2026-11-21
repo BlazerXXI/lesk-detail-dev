@@ -100,8 +100,8 @@
 					</div>
 					<h1>Detailing, který <em>přijede k vám</em></h1>
 					<p class="lead">
-						Profesionální péče o lak i interiér vozu přímo u vás doma, v práci
-						nebo v garáži. Přivezeme techniku i zkušenosti — vy jen připojíte
+						Profesionální péče o interiér vozu přímo u vás doma, v práci nebo v
+						garáži. Přivezeme techniku, chemii i zkušenosti — vy jen připojíte
 						zásuvku.
 					</p>
 					<div class="hero-actions">
@@ -193,11 +193,11 @@
 						Obsluhuji Pardubice, Chrudim, Hradec Králové i menší města a obce v
 						celém kraji. Pro firmy zajišťujeme pravidelnou péči o flotily.
 					</p>
-					<div class="about-stats">
+					<!-- <div class="about-stats">
 						<div class="stat"><b>1+</b><span>let praxe</span></div>
 						<div class="stat"><b>15+</b><span>upravených vozů</span></div>
 						<div class="stat"><b>100 %</b><span>práce u vás</span></div>
-					</div>
+					</div> -->
 				</div>
 				<div class="about-media reveal">
 					<img
@@ -220,7 +220,7 @@
 						s profesionální technikou a bez kompromisů.
 					</p>
 				</div>
-				<div class="svc-grid">
+				<div class="svc-grid" id="svc">
 					<!-- <article class="svc reveal">
 						<span class="svc-num">00</span>
 						<h3>Mytí a dekontaminace</h3>
@@ -234,7 +234,7 @@
 							<li>Čištění kol a podběhů</li>
 						</ul>
 					</article> -->
-					<article class="svc reveal">
+					<!-- <article class="svc reveal">
 						<span class="svc-num">01</span>
 						<h3>Obnova zažloutlých světlometů</h3>
 						<p>
@@ -299,7 +299,7 @@
 							<li>Obnova světlometů</li>
 							<li>Fotky před / po</li>
 						</ul>
-					</article>
+					</article> -->
 				</div>
 			</div>
 		</section>
@@ -391,50 +391,6 @@
 						</ul>
 						<a href="#kontakt" class="btn btn-primary">Objednat</a>
 					</div> -->
-
-					<script>
-						document.addEventListener("DOMContentLoaded", function () {
-							fetch("./data.json")
-								.then((response) => response.json())
-								.then((data) => {
-									const catalog = Array.isArray(data)
-										? data
-										: data.catalog || [];
-									catalog.forEach((item) => {
-										if (item) {
-											const services = document.querySelector("#services");
-											services.insertAdjacentHTML(
-												"beforeend",
-												`
-												<div class="price reveal" id="service">
-													<div class="price-name">${item.name || ""}</div>
-													<div class="price-amount">
-														${item.price || ""} <small>Kč</small>
-													</div>
-													<p class="price-desc">${item.description}</p>
-													<ul class="price-list">
-														${(Array.isArray(item.features) ? item.features : [])
-															.map((feature) => `<li>${feature}</li>`)
-															.join("")}
-														</ul>
-													<a
-														href="#kontakt"
-														id="service-order"
-														class="btn btn-dark"
-														data-service="${item.id || ""}"
-													>
-														Objednat
-													</a>
-												</div>`,
-											);
-											observeReveals(services);
-										}
-									});
-								})
-								.catch((error) => console.error(error));
-						});
-					</script>
-
 					<!-- <div class="price reveal">
 						<div class="price-name">Běžné čištění interiéru</div>
 						<div class="price-amount">900 <small>Kč</small></div>

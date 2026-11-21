@@ -26,7 +26,7 @@ if (burger && navLinks) {
 	translateButton.textContent = "EN";
 	translateButton.setAttribute("aria-label", "Translate page to English");
 	translateButton.style.cssText =
-		"cursor:pointer;margin:8px;padding:8px 12px;border:1px solid currentColor;border-radius:4px;background:transparent;color:inherit;font:inherit";
+		"cursor:pointer;margin:8px;padding:8px 12px;border:1px solid currentColor;border-radius:4px;background:transparent;color:rgba(255, 255, 255, 0.78);font:inherit";
 	const buttonHost = navLinks || header.querySelector("nav") || header;
 	buttonHost.appendChild(translateButton);
 
@@ -112,6 +112,77 @@ const observeReveals = (root = document) => {
 	});
 };
 observeReveals();
+
+// Features
+fetch("./data.json")
+	.then((response) => response.json())
+	.then((data) => {
+		const catalog = Array.isArray(data) ? data : data.catalog || [];
+		let count = 0;
+		catalog.forEach((item) => {
+			count += 1;
+			if (item) {
+				const services = document.querySelector("#svc");
+				services.insertAdjacentHTML(
+					"beforeend",
+					`
+					<article class="svc reveal">
+						<span class="svc-num">${count}</span>
+						<h3>${item.name}</h3>
+						<p>
+							${item.description}
+						</p>
+						<ul>
+							${(Array.isArray(item.features) ? item.features : [])
+								.map((feature) => `<li>${feature}</li>`)
+								.join("")}
+						</ul>
+					</article>
+					`,
+				);
+				observeReveals(services);
+			}
+		});
+	})
+	.catch((error) => console.error(error));
+
+// Price
+fetch("./data.json")
+	.then((response) => response.json())
+	.then((data) => {
+		const catalog = Array.isArray(data) ? data : data.catalog || [];
+		catalog.forEach((item) => {
+			if (item) {
+				const services = document.querySelector("#services");
+				services.insertAdjacentHTML(
+					"beforeend",
+					`
+												<div class="price reveal" id="service">
+													<div class="price-name">${item.name || ""}</div>
+													<div class="price-amount">
+														${item.price || ""} <small>Kč</small>
+													</div>
+													<p class="price-desc">${item.description}</p>
+													<ul class="price-list">
+														${(Array.isArray(item.features) ? item.features : [])
+															.map((feature) => `<li>${feature}</li>`)
+															.join("")}
+														</ul>
+													<a
+														href="#kontakt"
+														id="service-order"
+														class="btn btn-dark"
+														data-service="${item.id || ""}"
+													>
+														Objednat
+													</a>
+												</div>`,
+				);
+				observeReveals(services);
+			}
+		});
+	})
+	.catch((error) => console.error(error));
 
 // Choose city
 
@@ -321,7 +392,7 @@ fetch("./data.json")
 	})
 	.catch((error) => console.error(error));
 
-document.querySelectorAll("[data-service]").forEach((button) => {
+document.querySelectorAll("#service-order").forEach((button) => {
 	button.addEventListener("click", () => {
 		console.log("button.dataset.service: ", button.dataset.service);
 		select.value = button.dataset.service;
