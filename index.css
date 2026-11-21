@@ -120,6 +120,16 @@ h4 {
 	color: var(--white);
 	border-color: var(--ink);
 }
+.btn-dark.selected {
+	background: var(--amber);
+	color: var(--white);
+	border-color: var(--amber-dark);
+}
+.btn-dark.selected:hover {
+	background: var(--amber-dark);
+	border-color: var(--amber);
+	transform: translateY(-2px);
+}
 .btn-dark:hover {
 	background: var(--ink-3);
 	border-color: var(--ink-3);
@@ -476,6 +486,40 @@ section {
 }
 .services .eyebrow {
 	color: var(--amber);
+}
+.service-button .btn {
+	position: relative;
+	z-index: 2;
+}
+.service-button {
+	position: relative;
+}
+.service-info {
+	position: absolute;
+	opacity: 0;
+	top: -50%;
+	left: 0;
+	background-color: var(--paper-2);
+	padding: 5px 3px;
+	border-radius: var(--radius);
+	font-size: 14px;
+	color: var(--muted);
+	transition: all 0.3s ease;
+	z-index: 1;
+}
+.service-info.active {
+	top: -100%;
+	opacity: 1;
+}
+.service-info:after {
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	border: 7px solid transparent;
+	border-top-color: var(--paper-2);
+	transition: all 0.3s ease;
 }
 .svc-grid {
 	display: grid;

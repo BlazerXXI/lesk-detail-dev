@@ -127,7 +127,7 @@ fetch("./data.json")
 					"beforeend",
 					`
 					<article class="svc reveal">
-						<span class="svc-num">${count}</span>
+						<span class="svc-num">${count < 10 ? "0" + count : count}</span>
 						<h3>${item.name}</h3>
 						<p>
 							${item.description}
@@ -145,6 +145,51 @@ fetch("./data.json")
 		});
 	})
 	.catch((error) => console.error(error));
+
+let isSelectedService = false;
+
+const selectService = () => {
+	const orderButton = document.querySelectorAll("#service-order");
+	const syncSelectedButton = () => {
+		document.querySelectorAll("#service-order").forEach((button) => {
+			button.classList.toggle(
+				"selected",
+				Boolean(select && select.value) &&
+					button.dataset.service === select.value,
+			);
+			button.innerHTML = "Objednat";
+		});
+	};
+
+	if (select && !select.dataset.serviceSyncBound) {
+		select.dataset.serviceSyncBound = "true";
+		select.addEventListener("change", syncSelectedButton);
+	}
+
+	orderButton.forEach((button) => {
+		if (button.dataset.serviceClickBound) return;
+		button.dataset.serviceClickBound = "true";
+		button.addEventListener("click", () => {
+			const isSelected = select.value !== button.dataset.service;
+			select.value = isSelected ? button.dataset.service : "";
+			isSelectedService = isSelected;
+			syncSelectedButton();
+
+			document.querySelectorAll(".service-info").forEach((el) => {
+				el.classList.remove("active");
+			});
+			if (isSelected) {
+				const serviceInfo = document.getElementById(button.dataset.service);
+				if (serviceInfo) serviceInfo.classList.add("active");
+				button.innerHTML = "Objednáno";
+				setTimeout(() => {
+					if (serviceInfo) serviceInfo.classList.remove("active");
+				}, 5000);
+			}
+		});
+	});
+	syncSelectedButton();
+};
 
 // Price
 fetch("./data.json")
@@ -168,17 +213,20 @@ fetch("./data.json")
 															.map((feature) => `<li>${feature}</li>`)
 															.join("")}
 														</ul>
-													<a
-														href="#kontakt"
-														id="service-order"
-														class="btn btn-dark"
-														data-service="${item.id || ""}"
-													>
-														Objednat
-													</a>
+														<div class="service-button">
+															<p id="${item.id}" class="service-info">Tato služba byla vybrána a přidána do formuláře v dolní části stránky</p>
+															<a
+															id="service-order"
+															class="btn btn-dark"
+															data-service="${item.id || ""}"
+															>
+															Objednat
+															</a>
+														</div>
 												</div>`,
 				);
 				observeReveals(services);
+				selectService();
 			}
 		});
 	})
@@ -391,13 +439,6 @@ fetch("./data.json")
 		});
 	})
 	.catch((error) => console.error(error));
-
-document.querySelectorAll("#service-order").forEach((button) => {
-	button.addEventListener("click", () => {
-		console.log("button.dataset.service: ", button.dataset.service);
-		select.value = button.dataset.service;
-	});
-});
 
 if (form) {
 	form.addEventListener("submit", function (ev) {
