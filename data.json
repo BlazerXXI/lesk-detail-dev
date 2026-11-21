@@ -80,14 +80,14 @@
 			"Ochranný nátěr proti UV",
 			"Orientačně 1-2 hodiny"
 		],
-		"price": "700",
+		"price": "900",
 		"active": true
 	},
 
 	{
 		"id": "sale-preparation",
-		"name": "Příprava na prodej",
-		"description": "Kompletní příprava vozidla na prodej včetně detailního čištění.",
+		"name": "Kompletní péče o interiér a světlomety",
+		"description": "Ideální pro přípravu vozidla na prodej. Balíček zahrnuje hloubkové čištění interiéru a renovaci předních světlometů.",
 		"features": [
 			"Hloubkové čištění interiéru",
 			"Tepování sedadel a koberců",
@@ -95,7 +95,7 @@
 			"Fotky před / po",
 			"Orientačně 4-5 hodin"
 		],
-		"price": "od 2 200",
+		"price": "od 2 390",
 		"active": true
 	}
 ]
