@@ -27,7 +27,7 @@
 			"Čištění pomocí jemných detailingových štětců",
 			"Orientačně 2,5-3,5 hodiny"
 		],
-		"price": "1 200",
+		"price": "1 400",
 		"active": true
 	},
 	{
@@ -41,7 +41,7 @@
 			"Čištění a ošetření kožených sedadel",
 			"Orientačně 3,5-5 hodin"
 		],
-		"price": "1 700",
+		"price": "2 200",
 		"active": true
 	},
 	{
@@ -51,10 +51,9 @@
 		"features": [
 			"Extrakce horkou vodou",
 			"Odstranění skvrn",
-			"Dezinfekce interiéru",
 			"Orientačně 2 hodiny"
 		],
-		"price": "od 1 100",
+		"price": "od 1 300",
 		"active": true
 	},
 	{
@@ -95,7 +94,7 @@
 			"Fotky před / po",
 			"Orientačně 4-5 hodin"
 		],
-		"price": "od 2 390",
+		"price": "od 2 700",
 		"active": true
 	}
 ]
