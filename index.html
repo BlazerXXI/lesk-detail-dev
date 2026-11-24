@@ -2,25 +2,29 @@
 <html lang="cs">
 	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 	<script src="index.js" defer></script>
+	<script src="vehicle-sync.js" defer></script>
 	<link rel="stylesheet" href="index.css" />
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>
-  Mobilní detailing Pardubice | Tepování interiéru auta – LeskDetail
-</title>
+		<title>
+			Mobilní detailing Pardubice | Tepování interiéru auta – LeskDetail
+		</title>
 
-<meta
-  name="description"
-  content="Mobilní čištění interiérů aut v Pardubicích a okolí. Hloubkové čištění, tepování sedaček a koberců, detailing a leštění světlometů. Přijedeme za vámi. Nezávazná poptávka."
-/>
+		<meta
+			name="description"
+			content="Mobilní čištění interiérů aut v Pardubicích a okolí. Hloubkové čištění, tepování sedaček a koberců, detailing a leštění světlometů. Přijedeme za vámi."
+		/>
 
-<link rel="canonical" href="https://leskdetail.cz/" />
+		<link rel="canonical" href="https://leskdetail.cz/" />
 
-<meta property="og:locale" content="cs_CZ" />
-<meta property="og:site_name" content="LeskDetail" />
-<meta property="og:url" content="https://leskdetail.cz/" />
-<meta property="og:image" content="https://leskdetail.cz/images/octavia_3_inside_ft.jpg" />
+		<meta property="og:locale" content="cs_CZ" />
+		<meta property="og:site_name" content="LeskDetail" />
+		<meta property="og:url" content="https://leskdetail.cz/" />
+		<meta
+			property="og:image"
+			content="https://leskdetail.cz/images/octavia_3_inside_ft.jpg"
+		/>
 		<meta
 			property="og:title"
 			content="LeskDetail — mobilní detailing Pardubice a okolí"
@@ -366,6 +370,31 @@
 						potvrdíme po prohlídce vozu — bez překvapení.
 					</p>
 				</div>
+				<div class="vehicle-selector reveal">
+					<div class="vehicle-selector-copy">
+						<span class="vehicle-selector-kicker">Typ vozidla</span>
+						<h3>Jaké auto chcete vyčistit?</h3>
+						<p>
+							Vyberte kategorii svého vozu. Podle jeho velikosti se upraví
+							orientační cena služeb.
+						</p>
+					</div>
+					<div class="vehicle-select-field">
+						<label for="carType">Třída vozidla</label>
+						<select
+							id="carType"
+							required
+							aria-describedby="vehicle-select-hint"
+						>
+							<option value="" disabled selected>Vyberte třídu vozidla</option>
+						</select>
+						<span class="vehicle-select-hint" id="vehicle-select-hint"
+							>Například Golf, Octavia, Tiguan nebo BMW X5. Výběr se automaticky
+							přenese do poptávky.</span
+						>
+					</div>
+				</div>
+
 				<div class="price-flex" id="services">
 					<!-- <div class="price reveal">
 						<div class="price-name">Exteriér</div>
@@ -538,9 +567,9 @@
 
 				<!-- POZNÁMKA K CENÁM -->
 				<p class="price-note">
-					Ceny jsou orientační a liší se podle velikosti a stavu vozu. Obnova
-					zažloutlých světlometů od 700 Kč za pár. Pro vozy nad 5 m, SUV a
-					dodávky naceníme individuálně.
+					Ceny jsou orientační. Příplatek podle třídy vozidla se zohlední při
+					nacenění. Konečnou cenu potvrdíme podle velikosti a skutečného stavu
+					vozu. Cena leštění světlometů je uvedena za pár.
 				</p>
 			</div>
 		</section>
@@ -787,7 +816,7 @@
 								<a href="tel:+420734676271">+420 734 676 271</a>
 							</div>
 						</div>
-						<div class="c-item">
+						<!-- <div class="c-item">
 							<div class="c-icon">
 								<svg
 									width="20"
@@ -805,7 +834,7 @@
 								<b>E-mail</b>
 								<a href="mailto:info@leskdetail.cz">info@leskdetail.cz</a>
 							</div>
-						</div>
+						</div> -->
 						<div class="c-item">
 							<div class="c-icon">
 								<svg
@@ -834,7 +863,7 @@
 				</div>
 
 				<form id="contact-form" novalidate>
-					<h3>Nezávazná poptávka</h3>
+					<h3>Dejte nám vědět</h3>
 					<p class="form-sub">
 						Vyplňte pár údajů a my se vám ozveme s nabídkou.
 					</p>
@@ -860,32 +889,20 @@
 							/>
 						</div>
 					</div>
-					<div class="field">
-						<label for="email">E-mail</label>
-						<input
-							type="email"
-							id="email"
-							name="email"
-							placeholder="jan@email.cz"
-						/>
+
+					<div class="field vehicle-form-field">
+						<label for="carTypeForm">Třída vozidla *</label>
+						<select id="carTypeForm" name="carType" required>
+							<option value="" disabled selected>
+								Nejprve vyberte třídu vozidla v ceníku
+							</option>
+						</select>
+						<span class="field-hint"
+							>Výběr můžete změnit i zde — automaticky se aktualizuje také v
+							ceníku.</span
+						>
 					</div>
-					<div class="field-row">
-						<div class="field">
-							<label for="car">Vozidlo</label>
-							<input
-								type="text"
-								id="car"
-								name="car"
-								placeholder="Škoda Octavia, 2019"
-							/>
-						</div>
-						<div class="field">
-							<label for="service">Služba</label>
-							<select id="service" name="service">
-								<option value="">Vyberte službu</option>
-							</select>
-						</div>
-					</div>
+
 					<div class="field">
 						<label for="place">Místo výjezdu</label>
 						<input
@@ -903,13 +920,17 @@
 							placeholder="Popište stav vozu a co byste potřebovali…"
 						></textarea>
 					</div>
-					<button type="submit" class="btn btn-primary">
-						Odeslat poptávku
-					</button>
-					<p class="form-note">
-						Odesláním se otevře váš e-mailový klient s předvyplněnou zprávou —
-						stačí ji potvrdit. Vaše údaje nikam neukládáme.
-					</p>
+					<div class="order-summary">
+						<h3>Souhrn objednávky</h3>
+
+						<div id="selected-services">Zatím nebyla vybrána žádná služba.</div>
+
+						<div class="total-price">
+							<span>Celková cena:</span>
+							<strong id="total-price">0 Kč</strong>
+						</div>
+					</div>
+					<button type="submit" class="btn btn-primary">Objednat</button>
 					<div class="form-status" id="form-status" role="status"></div>
 				</form>
 			</div>

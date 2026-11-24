@@ -113,124 +113,317 @@ const observeReveals = (root = document) => {
 };
 observeReveals();
 
-// Features
-fetch("./data.json")
-	.then((response) => response.json())
-	.then((data) => {
-		const catalog = Array.isArray(data) ? data : data.catalog || [];
-		let count = 0;
-		catalog.forEach((item) => {
-			count += 1;
-			if (item) {
-				const services = document.querySelector("#svc");
-				services.insertAdjacentHTML(
-					"beforeend",
-					`
-					<article class="svc reveal">
-						<span class="svc-num">${count < 10 ? "0" + count : count}</span>
-						<h3>${item.name}</h3>
-						<p>
-							${item.description}
-						</p>
-						<ul>
-							${(Array.isArray(item.features) ? item.features : [])
-								.map((feature) => `<li>${feature}</li>`)
-								.join("")}
-						</ul>
-					</article>
-					`,
-				);
-				observeReveals(services);
-			}
-		});
-	})
-	.catch((error) => console.error(error));
+// ========================================
+// DATA + SERVICE PRICE CALCULATOR
+// ========================================
 
-let isSelectedService = false;
+let catalog = [];
+let carTypes = [];
 
-const selectService = () => {
-	const orderButton = document.querySelectorAll("#service-order");
-	const syncSelectedButton = () => {
-		document.querySelectorAll("#service-order").forEach((button) => {
-			button.classList.toggle(
-				"selected",
-				Boolean(select && select.value) &&
-					button.dataset.service === select.value,
-			);
-			button.innerHTML = "Objednat";
-		});
-	};
+const selectedServices = new Map();
 
-	if (select && !select.dataset.serviceSyncBound) {
-		select.dataset.serviceSyncBound = "true";
-		select.addEventListener("change", syncSelectedButton);
+const carTypeSelect = document.getElementById("carType");
+const carTypeFormSelect = document.getElementById("carTypeForm");
+const serviceSelect = document.getElementById("service");
+
+// Synchronize vehicle selectors
+function syncCarTypeOptions() {
+	if (!carTypeSelect || !carTypeFormSelect) return;
+
+	const selectedValue = carTypeSelect.value;
+
+	carTypeFormSelect.replaceChildren(
+		...Array.from(carTypeSelect.options, (option) => option.cloneNode(true)),
+	);
+
+	carTypeFormSelect.value = selectedValue;
+}
+
+const formatPrice = (price) => `${price.toLocaleString("cs-CZ")} Kč`;
+
+function getCarMultiplier() {
+	const option = carTypeSelect?.selectedOptions[0];
+
+	if (!option || !option.value) return 1;
+
+	const multiplier = Number(option.dataset.multiplier);
+
+	return Number.isFinite(multiplier) && multiplier > 0 ? multiplier : 1;
+}
+
+// Calculate the price of each selected service
+function getPricedServices() {
+	const multiplier = getCarMultiplier();
+
+	return Array.from(selectedServices.values()).map((service) => ({
+		...service,
+		finalPrice: Math.round(service.price * multiplier),
+	}));
+}
+
+// Update all prices and the order summary
+function updateTotalPrice() {
+	const pricedServices = getPricedServices();
+
+	const total = pricedServices.reduce(
+		(sum, service) => sum + service.finalPrice,
+		0,
+	);
+
+	const totalElement = document.getElementById("total-price");
+
+	if (totalElement) {
+		totalElement.textContent = formatPrice(total);
 	}
 
-	orderButton.forEach((button) => {
-		if (button.dataset.serviceClickBound) return;
-		button.dataset.serviceClickBound = "true";
-		button.addEventListener("click", () => {
-			const isSelected = select.value !== button.dataset.service;
-			select.value = isSelected ? button.dataset.service : "";
-			isSelectedService = isSelected;
-			syncSelectedButton();
+	const selectedElement = document.getElementById("selected-services");
 
-			document.querySelectorAll(".service-info").forEach((el) => {
-				el.classList.remove("active");
-			});
-			if (isSelected) {
-				const serviceInfo = document.getElementById(button.dataset.service);
-				if (serviceInfo) serviceInfo.classList.add("active");
-				button.innerHTML = "Objednáno";
-				setTimeout(() => {
-					if (serviceInfo) serviceInfo.classList.remove("active");
-				}, 5000);
-			}
+	if (selectedElement) {
+		selectedElement.innerHTML = pricedServices.length
+			? pricedServices
+					.map(
+						(service) => `
+                <div>
+                    ${service.name} — ${formatPrice(service.finalPrice)}
+                </div>
+            `,
+					)
+					.join("")
+			: "Zatím nebyla vybrána žádná služba.";
+	}
+
+	// Update prices in service cards
+	document
+		.querySelectorAll(".price-amount[data-base-price]")
+		.forEach((element) => {
+			const basePrice = Number(element.dataset.basePrice);
+			const finalPrice = Math.round(basePrice * getCarMultiplier());
+
+			element.innerHTML = `${formatPrice(finalPrice)}`;
 		});
+
+	// Update prices in the form service select
+	if (serviceSelect) {
+		Array.from(serviceSelect.options).forEach((option) => {
+			if (!option.dataset.price) return;
+
+			const basePrice = Number(option.dataset.price);
+			const finalPrice = Math.round(basePrice * getCarMultiplier());
+
+			option.textContent = `${option.dataset.name} — ${formatPrice(finalPrice)}`;
+		});
+	}
+
+	return total;
+}
+
+// Select or deselect a service
+function toggleService(id, name, price) {
+	if (selectedServices.has(id)) {
+		selectedServices.delete(id);
+	} else {
+		selectedServices.set(id, {
+			id,
+			name,
+			price: Number(price) || 0,
+		});
+	}
+
+	updateTotalPrice();
+	syncSelectedButtons();
+}
+
+// Update buttons on service cards
+function syncSelectedButtons() {
+	document.querySelectorAll(".service-order").forEach((button) => {
+		const selected = selectedServices.has(button.dataset.service);
+
+		button.classList.toggle("selected", selected);
+		button.textContent = selected ? "Vybráno ✓" : "Objednat";
 	});
-	syncSelectedButton();
-};
+}
 
-// Price
+// Click on service cards
+document.addEventListener("click", (event) => {
+	const button = event.target.closest(".service-order");
+
+	if (!button) return;
+
+	toggleService(
+		button.dataset.service,
+		button.dataset.name,
+		button.dataset.price,
+	);
+});
+
+// Select service from contact form
+if (serviceSelect) {
+	serviceSelect.addEventListener("change", () => {
+		const option = serviceSelect.selectedOptions[0];
+
+		if (!option || !option.value) return;
+
+		toggleService(option.value, option.dataset.name, option.dataset.price);
+
+		serviceSelect.value = "";
+	});
+}
+
+// Recalculate when vehicle class changes
+if (carTypeSelect) {
+	carTypeSelect.addEventListener("change", () => {
+		if (carTypeFormSelect) {
+			carTypeFormSelect.value = carTypeSelect.value;
+		}
+
+		updateTotalPrice();
+	});
+}
+
+if (carTypeFormSelect) {
+	carTypeFormSelect.addEventListener("change", () => {
+		if (!carTypeSelect) return;
+
+		carTypeSelect.value = carTypeFormSelect.value;
+
+		carTypeSelect.dispatchEvent(new Event("change", { bubbles: true }));
+	});
+}
+
+// ========================================
+// LOAD DATA.JSON — ONLY ONCE
+// ========================================
+
 fetch("./data.json")
-	.then((response) => response.json())
-	.then((data) => {
-		const catalog = Array.isArray(data) ? data : data.catalog || [];
-		catalog.forEach((item) => {
-			if (item) {
-				const services = document.querySelector("#services");
-				services.insertAdjacentHTML(
-					"beforeend",
-					`
-												<div class="price reveal" id="service">
-													<div class="price-name">${item.name || ""}</div>
-													<div class="price-amount">
-														${item.price || ""} <small>Kč</small>
-													</div>
-													<p class="price-desc">${item.description}</p>
-													<ul class="price-list">
-														${(Array.isArray(item.features) ? item.features : [])
-															.map((feature) => `<li>${feature}</li>`)
-															.join("")}
-														</ul>
-														<div class="service-button">
-															<p id="${item.id}" class="service-info">Tato služba byla vybrána a přidána do formuláře v dolní části stránky</p>
-															<a
-															id="service-order"
-															class="btn btn-dark"
-															data-service="${item.id || ""}"
-															>
-															Objednat
-															</a>
-														</div>
-												</div>`,
-				);
-				observeReveals(services);
-				selectService();
-			}
-		});
+	.then((response) => {
+		if (!response.ok) {
+			throw new Error(`HTTP error: ${response.status}`);
+		}
+
+		return response.json();
 	})
-	.catch((error) => console.error(error));
+	.then((data) => {
+		catalog = Array.isArray(data.catalog) ? data.catalog : [];
+		carTypes = Array.isArray(data.carTypes) ? data.carTypes : [];
+
+		// VEHICLE TYPES
+		if (carTypeSelect) {
+			carTypes.forEach((car) => {
+				const option = document.createElement("option");
+
+				option.value = car.id;
+				option.textContent = `${car.name} (${car.examples})`;
+				option.dataset.multiplier = car.multiplier;
+
+				carTypeSelect.appendChild(option);
+			});
+		}
+		syncCarTypeOptions();
+
+		// SERVICES IN CONTACT FORM
+		if (serviceSelect) {
+			catalog
+				.filter((item) => item.active)
+				.forEach((item) => {
+					const option = document.createElement("option");
+
+					option.value = item.id;
+					option.textContent = `${item.name} — ${item.price} Kč`;
+					option.dataset.name = item.name;
+					option.dataset.price = item.price;
+
+					serviceSelect.appendChild(option);
+				});
+		}
+
+		// FEATURES SECTION
+		const featuresContainer = document.querySelector("#svc");
+
+		if (featuresContainer) {
+			catalog
+				.filter((item) => item.active)
+				.forEach((item, index) => {
+					const count = index + 1;
+
+					featuresContainer.insertAdjacentHTML(
+						"beforeend",
+						`
+                        <article class="svc reveal">
+                            <span class="svc-num">
+                                ${count < 10 ? "0" + count : count}
+                            </span>
+                            <h3>${item.name}</h3>
+                            <p>${item.description}</p>
+                            <ul>
+                                ${(item.features || [])
+																	.map((feature) => `<li>${feature}</li>`)
+																	.join("")}
+                            </ul>
+                        </article>
+                        `,
+					);
+				});
+
+			observeReveals(featuresContainer);
+		}
+
+		// PRICE CARDS
+		const priceContainer = document.querySelector("#services");
+
+		if (priceContainer) {
+			catalog
+				.filter((item) => item.active)
+				.forEach((item) => {
+					priceContainer.insertAdjacentHTML(
+						"beforeend",
+						`
+                        <div class="price reveal">
+                            <div class="price-name">${item.name}</div>
+
+                            <div
+                                class="price-amount"
+                                data-base-price="${item.price}"
+                            >
+                                ${formatPrice(item.price)}
+                            </div>
+
+                            <p class="price-desc">${item.description}</p>
+
+                            <ul class="price-list">
+                                ${(item.features || [])
+																	.map((feature) => `<li>${feature}</li>`)
+																	.join("")}
+                            </ul>
+
+                            <div class="service-button">
+                                <p class="service-info">
+                                    Tato služba byla vybrána a přidána do formuláře v dolní části stránky
+                                </p>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-dark service-order"
+                                    data-service="${item.id}"
+                                    data-name="${item.name}"
+                                    data-price="${item.price}"
+                                >
+                                    Objednat
+                                </button>
+                            </div>
+                        </div>
+                        `,
+					);
+				});
+
+			observeReveals(priceContainer);
+		}
+
+		updateTotalPrice();
+		syncSelectedButtons();
+	})
+	.catch((error) => {
+		console.error("Chyba při načítání data.json:", error);
+	});
 
 // Choose city
 
@@ -416,29 +609,11 @@ if (mapElement && typeof L !== "undefined") {
 // Contact form -> mailto
 var form = document.getElementById("contact-form");
 var status = document.getElementById("form-status");
-var serviceSelect = document.getElementById("service");
 var citySelect = selectedCity;
 var placeInput = document.getElementById("place");
 if (citySelect && placeInput) {
 	placeInput.value = citySelect;
 }
-const select = document.getElementById("service");
-
-fetch("./data.json")
-	.then((response) => {
-		if (!response.ok) throw new Error("Failed to load data.json");
-		return response.json();
-	})
-	.then((data) => {
-		const catalog = Array.isArray(data) ? data : data.catalog || [];
-		catalog.forEach(({ id, name, price }) => {
-			const option = document.createElement("option");
-			option.value = id;
-			option.textContent = `${name} — ${price}`;
-			select.appendChild(option);
-		});
-	})
-	.catch((error) => console.error(error));
 
 if (form) {
 	form.addEventListener("submit", function (ev) {
@@ -446,8 +621,14 @@ if (form) {
 		var name = form.name.value.trim();
 		var phone = form.phone.value.trim();
 		var email = form.email.value.trim();
-		var car = form.car.value.trim();
-		var service = form.service.value;
+
+		var selectedCar = carTypeSelect?.selectedOptions[0];
+		var carType = selectedCar ? selectedCar.textContent.trim() : "";
+		var service = getPricedServices()
+			.map((item) => `${item.name} — ${formatPrice(item.finalPrice)}`)
+			.join("\n");
+		var total = updateTotalPrice();
+
 		var place = form.place.value.trim();
 		var message = form.message.value.trim();
 
@@ -459,13 +640,14 @@ if (form) {
 		}
 
 		var subject =
-			"Poptávka detailing — " + name + (car ? " (" + car + ")" : "");
+			"Poptávka detailing — " + name + (carType ? " (" + carType + ")" : "");
 		var body = [
 			"Jméno: " + name,
 			"Telefon: " + phone,
 			email ? "E-mail: " + email : "",
-			car ? "Vozidlo: " + car : "",
-			"Služba: " + service,
+			carType ? "Třída vozidla: " + carType : "",
+			"Vybrané služby:\n" + (service || "Nebyla vybrána žádná služba"),
+			"Celková cena: " + total + " Kč",
 			place ? "Místo výjezdu: " + place : "",
 			"",
 			message ? "Zpráva:" : "",
