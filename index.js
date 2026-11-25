@@ -216,24 +216,126 @@ function updateTotalPrice() {
 		});
 	}
 
+	syncServiceCheckboxes();
+
 	return total;
+}
+
+// Render service checkboxes
+function renderServiceCheckboxes() {
+    if (!serviceCheckboxes) return;
+
+    serviceCheckboxes.innerHTML = catalog
+        .filter(item => item.active)
+        .map(item => `
+            <label class="service-checkbox">
+                <input
+                    type="checkbox"
+                    value="${item.id}"
+                    data-name="${item.name}"
+                    data-price="${item.price}"
+                    ${selectedServices.has(item.id) ? "checked" : ""}
+                >
+
+                <span>
+                    <strong>${item.name}</strong>
+                    <small>${formatPrice(
+                        Math.round(item.price * getCarMultiplier())
+                    )}</small>
+                </span>
+            </label>
+        `)
+        .join("");
+
+    updateServiceDropdownLabel();
+}
+
+// Synchronize checkboxes with selectedServices
+function syncServiceCheckboxes() {
+    if (!serviceCheckboxes) return;
+
+    serviceCheckboxes.querySelectorAll('input[type="checkbox"]').forEach(input => {
+        input.checked = selectedServices.has(input.value);
+    });
+
+    updateServiceDropdownLabel();
+}
+
+// Update dropdown label
+function updateServiceDropdownLabel() {
+    if (!serviceDropdownLabel) return;
+
+    const count = selectedServices.size;
+
+    serviceDropdownLabel.textContent = count
+        ? `Vybrané služby (${count})`
+        : "Vyberte služby";
+}
+
+// Handle checkbox changes
+if (serviceCheckboxes) {
+    serviceCheckboxes.addEventListener("change", event => {
+        const input = event.target;
+
+        if (input.type !== "checkbox") return;
+
+        const id = input.value;
+
+        if (input.checked) {
+            selectedServices.set(id, {
+                id,
+                name: input.dataset.name,
+                price: Number(input.dataset.price) || 0
+            });
+        } else {
+            selectedServices.delete(id);
+        }
+
+        updateTotalPrice();
+        syncSelectedButtons();
+        updateServiceDropdownLabel();
+    });
+}
+
+// Open / close dropdown
+if (serviceDropdownTrigger && serviceDropdown) {
+    serviceDropdownTrigger.addEventListener("click", () => {
+        const isOpen = !serviceDropdown.hidden;
+
+        serviceDropdown.hidden = isOpen;
+
+        serviceDropdownTrigger.setAttribute(
+            "aria-expanded",
+            String(!isOpen)
+        );
+    });
+
+    document.addEventListener("click", event => {
+        if (!event.target.closest("#service-multiselect")) {
+            serviceDropdown.hidden = true;
+            serviceDropdownTrigger.setAttribute("aria-expanded", "false");
+        }
+    });
 }
 
 // Select or deselect a service
 function toggleService(id, name, price) {
-	if (selectedServices.has(id)) {
-		selectedServices.delete(id);
-	} else {
-		selectedServices.set(id, {
-			id,
-			name,
-			price: Number(price) || 0,
-		});
-	}
+    if (selectedServices.has(id)) {
+        selectedServices.delete(id);
+    } else {
+        selectedServices.set(id, {
+            id,
+            name,
+            price: Number(price) || 0,
+        });
+    }
 
-	updateTotalPrice();
-	syncSelectedButtons();
+    updateTotalPrice();
+    syncSelectedButtons();
+    syncServiceCheckboxes();
 }
+
+
 
 // Update buttons on service cards
 function syncSelectedButtons() {
@@ -322,21 +424,8 @@ fetch("./data.json")
 		}
 		syncCarTypeOptions();
 
-		// SERVICES IN CONTACT FORM
-		if (serviceSelect) {
-			catalog
-				.filter((item) => item.active)
-				.forEach((item) => {
-					const option = document.createElement("option");
-
-					option.value = item.id;
-					option.textContent = `${item.name} — ${item.price} Kč`;
-					option.dataset.name = item.name;
-					option.dataset.price = item.price;
-
-					serviceSelect.appendChild(option);
-				});
-		}
+// SERVICES IN CONTACT FORM
+renderServiceCheckboxes();
 
 		// FEATURES SECTION
 		const featuresContainer = document.querySelector("#svc");
@@ -667,7 +756,8 @@ if (form) {
             phone: phone,
             car_type: carType,
             services: service || "Nebyla vybrána žádná služba",
-            total_price: total + " Kč",
+												services_count: selectedServices.size,
+												total_price: total + " Kč",
             place: place,
             message: message
         };
