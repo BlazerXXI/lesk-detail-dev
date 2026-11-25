@@ -1,3 +1,5 @@
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/mdegzwrd";
+
 // Mobile menu
 var burger = document.getElementById("burger");
 var navLinks = document.getElementById("nav-links");
@@ -606,65 +608,101 @@ if (mapElement && typeof L !== "undefined") {
 	}, 300);
 }
 
-// Contact form -> mailto
+
+// Contact form -> Formspree
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/ТВОЙ_ID";
+
 var form = document.getElementById("contact-form");
 var status = document.getElementById("form-status");
 var citySelect = selectedCity;
 var placeInput = document.getElementById("place");
+
 if (citySelect && placeInput) {
-	placeInput.value = citySelect;
+    placeInput.value = citySelect;
 }
 
 if (form) {
-	form.addEventListener("submit", function (ev) {
-		ev.preventDefault();
-		var name = form.name.value.trim();
-		var phone = form.phone.value.trim();
+    form.addEventListener("submit", async function (ev) {
+        ev.preventDefault();
 
-		var selectedCar = carTypeSelect?.selectedOptions[0];
-		var carType = selectedCar ? selectedCar.textContent.trim() : "";
-		var service = getPricedServices()
-			.map((item) => `${item.name} — ${formatPrice(item.finalPrice)}`)
-			.join("\n");
-		var total = updateTotalPrice();
+        var name = form.name.value.trim();
+        var phone = form.phone.value.trim();
 
-		var place = form.place.value.trim();
-		var message = form.message.value.trim();
+        var selectedCar = carTypeSelect?.selectedOptions[0];
+        var carType = selectedCar ? selectedCar.textContent.trim() : "";
 
-		if (!name || !phone) {
-			status.textContent =
-				"Vyplňte prosím jméno a telefon, abychom se vám mohli ozvat.";
-			status.classList.add("show");
-			return;
-		}
+        var service = getPricedServices()
+            .map((item) => `${item.name} — ${formatPrice(item.finalPrice)}`)
+            .join("\n");
 
-		var subject =
-			"Poptávka detailing — " + name + (carType ? " (" + carType + ")" : "");
-		var body = [
-			"Jméno: " + name,
-			"Telefon: " + phone,
-			carType ? "Třída vozidla: " + carType : "",
-			"Vybrané služby:\n" + (service || "Nebyla vybrána žádná služba"),
-			"Celková cena: " + total + " Kč",
-			place ? "Místo výjezdu: " + place : "",
-			"",
-			message ? "Zpráva:" : "",
-			message,
-		]
-			.filter(function (l) {
-				return l !== "";
-			})
-			.join("\n");
+        var total = updateTotalPrice();
+        var place = form.place.value.trim();
+        var message = form.message.value.trim();
 
-		var href =
-			"mailto:ruslandendik@gmail.com?subject=" +
-			encodeURIComponent(subject) +
-			"&body=" +
-			encodeURIComponent(body);
-		window.location.href = href;
+        if (!name || !phone) {
+            status.textContent =
+                "Vyplňte prosím jméno a telefon, abychom se vám mohli ozvat.";
+            status.classList.add("show");
+            return;
+        }
 
-		status.textContent =
-			"Otevíráme váš e-mailový klient s předvyplněnou poptávkou. Pokud se neotevřel, napište nám přímo na info@leskdetail.cz nebo zavolejte na +420 734 676 271.";
-		status.classList.add("show");
-	});
+        var subject =
+            "Poptávka detailing — " + name +
+            (carType ? " (" + carType + ")" : "");
+
+        var payload = {
+            _subject: subject,
+            name: name,
+            phone: phone,
+            car_type: carType,
+            services: service || "Nebyla vybrána žádná služba",
+            total_price: total + " Kč",
+            place: place,
+            message: message
+        };
+
+        var submitButton = form.querySelector('[type="submit"]');
+
+        if (submitButton) {
+            submitButton.disabled = true;
+        }
+
+        status.textContent = "Odesíláme vaši poptávku...";
+        status.classList.add("show");
+
+        try {
+            var response = await fetch(FORMSPREE_ENDPOINT, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error("Formspree error: " + response.status);
+            }
+
+            status.textContent =
+                "Děkujeme! Vaše poptávka byla úspěšně odeslána. Brzy se vám ozveme.";
+
+            form.reset();
+
+            if (citySelect && placeInput) {
+                placeInput.value = citySelect;
+            }
+
+        } catch (error) {
+            console.error(error);
+
+            status.textContent =
+                "Odeslání se nezdařilo. Zkuste to prosím znovu nebo nám zavolejte na +420 734 676 271.";
+
+        } finally {
+            if (submitButton) {
+                submitButton.disabled = false;
+            }
+        }
+    });
 }
