@@ -710,3 +710,11 @@ if (form) {
         }
     });
 }
+
+window.addEventListener("error", function (e) {
+    alert("JS ERROR: " + e.message + "\nСтрока: " + e.lineno);
+});
+
+window.addEventListener("unhandledrejection", function (e) {
+    alert("PROMISE ERROR: " + e.reason);
+});
