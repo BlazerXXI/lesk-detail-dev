@@ -146,7 +146,7 @@ function syncCarTypeOptions() {
 	carTypeFormSelect.value = selectedValue;
 }
 
-const formatPrice = (price) => `${price.toLocaleString("cs-CZ")} Kč`;
+const formatPrice = (price) => !price ? '<a href="#ceny">Vyberte si svou první službu</a>' : `${price.toLocaleString("cs-CZ")} Kč`;
 
 function getCarMultiplier() {
 	const option = carTypeSelect?.selectedOptions[0];
