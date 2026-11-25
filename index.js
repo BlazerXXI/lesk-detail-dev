@@ -480,7 +480,7 @@ renderServiceCheckboxes();
                                 class="price-amount"
                                 data-base-price="${item.price}"
                             >
-                                ${formatPrice(item.price)}
+                               od ${formatPrice(item.price)}
                             </div>
 
                             <p class="price-desc">${item.description}</p>
