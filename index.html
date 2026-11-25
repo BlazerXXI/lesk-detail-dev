@@ -649,12 +649,36 @@
 						>
 					</div>
 					
-					<div class="field">
-						<label for="service">Služba</label>
-						<select id="service" name="service">
-							<option value="">Vyberte službu</option>
-						</ select>
-					</div>
+<div class="field">
+    <label>Služby</label>
+
+    <div class="service-multiselect" id="service-multiselect">
+        <button
+            type="button"
+            class="service-multiselect-trigger"
+            id="service-dropdown-trigger"
+            aria-expanded="false"
+            aria-controls="service-dropdown"
+        >
+            <span id="service-dropdown-label">
+                Vyberte služby
+            </span>
+            <span class="service-dropdown-arrow">▾</span>
+        </button>
+
+        <div
+            class="service-dropdown"
+            id="service-dropdown"
+            hidden
+        >
+            <div id="service-checkboxes"></div>
+        </div>
+    </div>
+
+    <span class="field-hint">
+        Můžete vybrat více služeb najednou.
+    </span>
+</div>
 
 					<div class="field">
 						<label for="place">Místo výjezdu</label>
