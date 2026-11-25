@@ -612,13 +612,19 @@ if (mapElement && typeof L !== "undefined") {
 // Contact form -> Formspree
 
 var form = document.getElementById("contact-form");
-var status = document.getElementById("form-status");
+var formStatus = document.getElementById("form-status");
+
+if (!formStatus) {
+    console.error("Element #form-status not found");
+}
 
 function showFormStatus(message) {
-    if (!status) return;
-    status.textContent = message;
-    status.classList.add("show");
+    if (!formStatus) return;
+
+    formStatus.textContent = message;
+    formStatus.classList.add("show");
 }
+
 var citySelect = selectedCity;
 var placeInput = document.getElementById("place");
 
@@ -645,7 +651,7 @@ if (form) {
 								var message = form.elements.namedItem("message")?.value.trim() || "";
 
         if (!name || !phone) {
-            status.textContent =
+            formStatus.textContent =
                 "Vyplňte prosím jméno a telefon, abychom se vám mohli ozvat.";
             return;
         }
@@ -671,8 +677,7 @@ if (form) {
             submitButton.disabled = true;
         }
 
-        status.textContent = "Odesíláme vaši poptávku...";
-        status.classList.add("show");
+			     showFormStatus("Odesíláme vaši poptávku...");
 
         try {
             var response = await fetch(FORMSPREE_ENDPOINT, {
@@ -688,7 +693,7 @@ if (form) {
                 throw new Error("Formspree error: " + response.status);
             }
 
-            status.textContent =
+            formStatus.textContent =
                 "Děkujeme! Vaše poptávka byla úspěšně odeslána. Brzy se vám ozveme.";
 
             form.reset();
@@ -700,7 +705,7 @@ if (form) {
         } catch (error) {
             console.error(error);
 
-            status.textContent =
+            formStatus.textContent =
                 "Odeslání se nezdařilo. Zkuste to prosím znovu nebo nám zavolejte na +420 734 676 271.";
 
         } finally {
