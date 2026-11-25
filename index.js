@@ -651,10 +651,11 @@ if (form) {
 								var message = form.elements.namedItem("message")?.value.trim() || "";
 
         if (!name || !phone) {
-            formStatus.textContent =
-                "Vyplňte prosím jméno a telefon, abychom se vám mohli ozvat.";
-            return;
-        }
+    showFormStatus(
+        "Vyplňte prosím jméno a telefon, abychom se vám mohli ozvat."
+    );
+    return;
+}
 
         var subject =
             "Poptávka detailing — " + name +
@@ -693,8 +694,9 @@ if (form) {
                 throw new Error("Formspree error: " + response.status);
             }
 
-            formStatus.textContent =
-                "Děkujeme! Vaše poptávka byla úspěšně odeslána. Brzy se vám ozveme.";
+showFormStatus(
+    "Děkujeme! Vaše poptávka byla úspěšně odeslána. Brzy se vám ozveme."
+);
 
             form.reset();
 
@@ -705,8 +707,9 @@ if (form) {
         } catch (error) {
             console.error(error);
 
-            formStatus.textContent =
-                "Odeslání se nezdařilo. Zkuste to prosím znovu nebo nám zavolejte na +420 734 676 271.";
+ showFormStatus(
+    "Odeslání se nezdařilo. Zkuste to prosím znovu nebo nám zavolejte na +420 734 676 271."
+);
 
         } finally {
             if (submitButton) {
