@@ -127,6 +127,11 @@ const selectedServices = new Map();
 const carTypeSelect = document.getElementById("carType");
 const carTypeFormSelect = document.getElementById("carTypeForm");
 const serviceSelect = document.getElementById("service");
+// Multi-select services
+const serviceCheckboxes = document.getElementById("service-checkboxes");
+const serviceDropdown = document.getElementById("service-dropdown");
+const serviceDropdownTrigger = document.getElementById("service-dropdown-trigger");
+const serviceDropdownLabel = document.getElementById("service-dropdown-label");
 
 // Synchronize vehicle selectors
 function syncCarTypeOptions() {
