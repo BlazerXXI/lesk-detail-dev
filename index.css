@@ -1564,80 +1564,8 @@ footer {
 	\tcolor: var(--muted);
 }
 
-
-/* ========================================
-   MOBILE OVERFLOW FIX
-   ======================================== */
-
-html,
-body {
-    width: 100%;
+#carType,
+#carTypeForm {
     max-width: 100%;
-    overflow-x: clip;
+    overflow: hidden;
 }
-
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
-
-@media (max-width: 700px) {
-
-    .wrap {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-    }
-
-    .pricing,
-    .pricing .wrap {
-        min-width: 0;
-        max-width: 100%;
-    }
-
-    .vehicle-selector {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        padding: 22px 18px;
-        overflow: hidden;
-    }
-
-    .vehicle-selector > *,
-    .vehicle-selector-copy,
-    .vehicle-select-field {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-    }
-
-    .vehicle-select-field select {
-        display: block;
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        box-sizing: border-box;
-        text-overflow: ellipsis;
-    }
-
-    .price-flex {
-        grid-template-columns: minmax(0, 1fr);
-        min-width: 0;
-    }
-
-    .price {
-        min-width: 0;
-        max-width: 100%;
-    }
-
-    #contact-form,
-    #contact-form .field,
-    #contact-form select {
-        min-width: 0;
-        max-width: 100%;
-    }
-}
-
