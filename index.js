@@ -613,6 +613,12 @@ if (mapElement && typeof L !== "undefined") {
 
 var form = document.getElementById("contact-form");
 var status = document.getElementById("form-status");
+
+function showFormStatus(message) {
+    if (!status) return;
+    status.textContent = message;
+    status.classList.add("show");
+}
 var citySelect = selectedCity;
 var placeInput = document.getElementById("place");
 
@@ -624,8 +630,8 @@ if (form) {
     form.addEventListener("submit", async function (ev) {
         ev.preventDefault();
 
-        var name = form.name.value.trim();
-        var phone = form.phone.value.trim();
+        var name = form.elements.namedItem("name")?.value.trim() || "";
+								var phone = form.elements.namedItem("phone")?.value.trim() || "";
 
         var selectedCar = carTypeSelect?.selectedOptions[0];
         var carType = selectedCar ? selectedCar.textContent.trim() : "";
@@ -635,13 +641,12 @@ if (form) {
             .join("\n");
 
         var total = updateTotalPrice();
-        var place = form.place.value.trim();
-        var message = form.message.value.trim();
+        var place = form.elements.namedItem("place")?.value.trim() || "";
+								var message = form.elements.namedItem("message")?.value.trim() || "";
 
         if (!name || !phone) {
             status.textContent =
                 "Vyplňte prosím jméno a telefon, abychom se vám mohli ozvat.";
-            status.classList.add("show");
             return;
         }
 
