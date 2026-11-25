@@ -146,7 +146,10 @@ function syncCarTypeOptions() {
 	carTypeFormSelect.value = selectedValue;
 }
 
-const formatPrice = (price) => !price ? '<a href="#ceny">Vyberte si svou první službu</a>' : `${price.toLocaleString("cs-CZ")} Kč`;
+const formatPrice = (price) =>
+    price
+        ? `${price.toLocaleString("cs-CZ")} Kč`
+        : '<a href="#ceny">Vyberte si svou první službu</a>';
 
 function getCarMultiplier() {
 	const option = carTypeSelect?.selectedOptions[0];
@@ -180,7 +183,7 @@ function updateTotalPrice() {
 	const totalElement = document.getElementById("total-price");
 
 	if (totalElement) {
-		totalElement.textContent = formatPrice(total);
+		totalElement.innerHTML = formatPrice(total);
 	}
 
 	const selectedElement = document.getElementById("selected-services");
