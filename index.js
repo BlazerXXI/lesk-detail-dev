@@ -610,7 +610,6 @@ if (mapElement && typeof L !== "undefined") {
 
 
 // Contact form -> Formspree
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/ТВОЙ_ID";
 
 var form = document.getElementById("contact-form");
 var status = document.getElementById("form-status");
