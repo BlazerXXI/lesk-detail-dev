@@ -620,7 +620,6 @@ if (form) {
 		ev.preventDefault();
 		var name = form.name.value.trim();
 		var phone = form.phone.value.trim();
-		var email = form.email.value.trim();
 
 		var selectedCar = carTypeSelect?.selectedOptions[0];
 		var carType = selectedCar ? selectedCar.textContent.trim() : "";
@@ -644,7 +643,6 @@ if (form) {
 		var body = [
 			"Jméno: " + name,
 			"Telefon: " + phone,
-			email ? "E-mail: " + email : "",
 			carType ? "Třída vozidla: " + carType : "",
 			"Vybrané služby:\n" + (service || "Nebyla vybrána žádná služba"),
 			"Celková cena: " + total + " Kč",
@@ -659,7 +657,7 @@ if (form) {
 			.join("\n");
 
 		var href =
-			"mailto:info@leskdetail.cz?subject=" +
+			"mailto:ruslandendik@gmail.com?subject=" +
 			encodeURIComponent(subject) +
 			"&body=" +
 			encodeURIComponent(body);
