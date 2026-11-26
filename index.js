@@ -146,9 +146,14 @@ function syncCarTypeOptions() {
 	carTypeFormSelect.value = selectedValue;
 }
 
+const formatPrice = (price) => !price
+    ? '<a href="#ceny">Vyberte si svou první službu</a>'
+    : `${price.toLocaleString("cs-CZ")} Kč`;
+
 const formatStartingPrice = (price) => !price
     ? '<a href="#ceny">Vyberte si svou první službu</a>'
     : `od ${price.toLocaleString("cs-CZ")} Kč`;
+				
 // Round final prices to the nearest 100 CZK
 function roundPrice(price) {
     return Math.round(price / 100) * 100;
@@ -211,7 +216,7 @@ function updateTotalPrice() {
 			const basePrice = Number(element.dataset.basePrice);
 			const finalPrice = roundPrice(basePrice * getCarMultiplier());
 
-			element.innerHTML = `${formatPrice(finalPrice)}`;
+element.innerHTML = formatStartingPrice(finalPrice);
 		});
 
 	// Update prices in the form service select
@@ -222,7 +227,7 @@ function updateTotalPrice() {
 			const basePrice = Number(option.dataset.price);
 			const finalPrice = roundPrice(basePrice * getCarMultiplier());
 
-			option.textContent = `${option.dataset.name} — ${formatPrice(finalPrice)}`;
+option.textContent = `${option.dataset.name} — ${formatStartingPrice(finalPrice)}`;
 		});
 	}
 
@@ -249,9 +254,9 @@ function renderServiceCheckboxes() {
 
                 <span>
                     <strong>${item.name}</strong>
-                    <small>${formatPrice(
-																					roundPrice(item.price * getCarMultiplier())
-                    )}</small>
+                    <small>${formatStartingPrice(
+    roundPrice(item.price * getCarMultiplier())
+)}</small>
                 </span>
             </label>
         `)
@@ -485,7 +490,7 @@ renderServiceCheckboxes();
                                 class="price-amount"
                                 data-base-price="${item.price}"
                             >
-                               od ${formatPrice(item.price)}
+${formatStartingPrice(item.price)}
                             </div>
 
                             <p class="price-desc">${item.description}</p>
