@@ -146,10 +146,9 @@ function syncCarTypeOptions() {
 	carTypeFormSelect.value = selectedValue;
 }
 
-const formatPrice = (price) =>
-    price
-        ? `${price.toLocaleString("cs-CZ")} Kč`
-        : '<a href="#ceny">Vyberte si svou první službu</a>';
+const formatStartingPrice = (price) => !price
+    ? '<a href="#ceny">Vyberte si svou první službu</a>'
+    : `od ${price.toLocaleString("cs-CZ")} Kč`;
 // Round final prices to the nearest 100 CZK
 function roundPrice(price) {
     return Math.round(price / 100) * 100;
