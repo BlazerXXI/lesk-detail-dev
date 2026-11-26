@@ -226,8 +226,7 @@
 						s profesionální technikou a bez kompromisů.
 					</p>
 				</div>
-				<div class="svc-grid" id="svc">
-				</div>
+				<div class="svc-grid" id="svc"></div>
 			</div>
 		</section>
 
@@ -315,8 +314,7 @@
 					</div>
 				</div>
 
-				<div class="price-flex" id="services">
-				</div>
+				<div class="price-flex" id="services"></div>
 
 				<!-- POZNÁMKA K CENÁM -->
 				<p class="price-note">
@@ -648,46 +646,59 @@
 							ceníku.</span
 						>
 					</div>
-					
-<div class="field">
-    <label>Služby</label>
 
-    <div class="service-multiselect" id="service-multiselect">
-        <button
-            type="button"
-            class="service-multiselect-trigger"
-            id="service-dropdown-trigger"
-            aria-expanded="false"
-            aria-controls="service-dropdown"
-        >
-            <span id="service-dropdown-label">
-                Vyberte služby
-            </span>
-            <span class="service-dropdown-arrow">▾</span>
-        </button>
+					<div class="field">
+						<label>Služby</label>
 
-        <div
-            class="service-dropdown"
-            id="service-dropdown"
-            hidden
-        >
-            <div id="service-checkboxes"></div>
-        </div>
-    </div>
+						<div class="service-multiselect" id="service-multiselect">
+							<button
+								type="button"
+								class="service-multiselect-trigger"
+								id="service-dropdown-trigger"
+								aria-expanded="false"
+								aria-controls="service-dropdown"
+							>
+								<span id="service-dropdown-label"> Vyberte služby </span>
+								<span class="service-dropdown-arrow">▾</span>
+							</button>
 
-    <span class="field-hint">
-        Můžete vybrat více služeb najednou.
-    </span>
-</div>
+							<div class="service-dropdown" id="service-dropdown" hidden>
+								<div id="service-checkboxes"></div>
+							</div>
+						</div>
+
+						<span class="field-hint">
+							Můžete vybrat více služeb najednou.
+						</span>
+					</div>
+
+					<div class="field">
+						<label for="email">E-mail</label>
+						<input
+							type="email"
+							id="email"
+							name="email"
+							placeholder="vas@email.cz"
+						/>
+					</div>
+
+					<div class="field-row">
+						<div class="field">
+							<label for="booking-date">Datum rezervace *</label>
+							<input type="date" id="booking-date" name="date" required />
+						</div>
+
+						<div class="field">
+							<label for="booking-time">Čas rezervace *</label>
+							<select id="booking-time" name="time" required disabled>
+								<option value="">Nejprve vyberte datum</option>
+							</select>
+						</div>
+					</div>
 
 					<div class="field">
 						<label for="place">Místo výjezdu</label>
-						<input
-							type="text"
-							id="place"
-							name="city"
-							placeholder="Pardubice"
-						/>
+						<input type="text" id="place" name="city" placeholder="Pardubice" />
 					</div>
 					<div class="field">
 						<label for="message">Zpráva</label>
@@ -704,7 +715,9 @@
 
 						<div class="total-price">
 							<span>Celková cena:</span>
-							<strong id="total-price"><a href="#ceny">Vyberte si svou první službu</a></strong>
+							<strong id="total-price"
+								><a href="#ceny">Vyberte si svou první službu</a></strong
+							>
 						</div>
 					</div>
 					<button type="submit" class="btn btn-primary">Objednat</button>

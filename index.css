@@ -1672,3 +1672,27 @@ footer {
 .service-checkbox small {
     color: #777;
 }
+
+/* Booking date and time fields */
+#booking-date,
+#booking-time,
+#email {
+  width: 100%;
+}
+
+#booking-date,
+#booking-time {
+  min-height: 48px;
+  cursor: pointer;
+}
+
+#booking-time:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+#booking-date:focus,
+#booking-time:focus,
+#email:focus {
+  outline: none;
+}

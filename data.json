@@ -13,6 +13,7 @@
         "Ošetření plastových povrchů",
         "Orientačně 1,5–2,5 hodiny"
       ],
+			"duration": 2,
       "price": 990,
       "active": true
     },
@@ -28,6 +29,7 @@
         "Čištění dveřních pantů, omezovačů a zámků",
         "Orientačně 2,5–3,5 hodiny"
       ],
+			"duration": 4,
       "price": 1590,
       "active": true
     },
@@ -43,6 +45,7 @@
         "Důkladné čištění podlahy a zavazadlového prostoru",
         "Orientačně 4–6 hodin"
       ],
+			"duration": 6,
       "price": 2490,
       "active": true
     },
@@ -56,6 +59,7 @@
         "Ošetření běžných skvrn",
         "Orientačně 1,5–2,5 hodiny"
       ],
+			"duration": 3,
       "price": 1490,
       "active": true
     },
@@ -70,6 +74,7 @@
         "Aplikace ochranné vrstvy proti UV záření",
         "Orientačně 1–2 hodiny"
       ],
+			"duration": 2,
       "price": 1200,
       "active": true
     },
@@ -82,6 +87,7 @@
         "Ošetření vhodných plastových povrchů",
         "Cena a rozsah dle stavu vozidla"
       ],
+			"duration": 2,
       "price": 900,
       "active": false
     },
@@ -95,6 +101,7 @@
         "Fotografie před a po",
         "Cena dle velikosti a stavu vozidla"
       ],
+			"duration": 8,
       "price": 3290,
       "active": false
     }
