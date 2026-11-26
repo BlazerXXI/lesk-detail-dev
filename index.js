@@ -150,7 +150,10 @@ const formatPrice = (price) =>
     price
         ? `${price.toLocaleString("cs-CZ")} Kč`
         : '<a href="#ceny">Vyberte si svou první službu</a>';
-
+// Round final prices to the nearest 100 CZK
+function roundPrice(price) {
+    return Math.round(price / 100) * 100;
+}
 function getCarMultiplier() {
 	const option = carTypeSelect?.selectedOptions[0];
 
@@ -163,12 +166,12 @@ function getCarMultiplier() {
 
 // Calculate the price of each selected service
 function getPricedServices() {
-	const multiplier = getCarMultiplier();
+    const multiplier = getCarMultiplier();
 
-	return Array.from(selectedServices.values()).map((service) => ({
-		...service,
-		finalPrice: Math.round(service.price * multiplier),
-	}));
+    return Array.from(selectedServices.values()).map((service) => ({
+        ...service,
+        finalPrice: roundPrice(service.price * multiplier),
+    }));
 }
 
 // Update all prices and the order summary
@@ -207,7 +210,7 @@ function updateTotalPrice() {
 		.querySelectorAll(".price-amount[data-base-price]")
 		.forEach((element) => {
 			const basePrice = Number(element.dataset.basePrice);
-			const finalPrice = Math.round(basePrice * getCarMultiplier());
+			const finalPrice = roundPrice(basePrice * getCarMultiplier());
 
 			element.innerHTML = `${formatPrice(finalPrice)}`;
 		});
@@ -218,7 +221,7 @@ function updateTotalPrice() {
 			if (!option.dataset.price) return;
 
 			const basePrice = Number(option.dataset.price);
-			const finalPrice = Math.round(basePrice * getCarMultiplier());
+			const finalPrice = roundPrice(basePrice * getCarMultiplier());
 
 			option.textContent = `${option.dataset.name} — ${formatPrice(finalPrice)}`;
 		});
@@ -248,7 +251,7 @@ function renderServiceCheckboxes() {
                 <span>
                     <strong>${item.name}</strong>
                     <small>${formatPrice(
-                        Math.round(item.price * getCarMultiplier())
+																					roundPrice(item.price * getCarMultiplier())
                     )}</small>
                 </span>
             </label>
