@@ -1673,26 +1673,66 @@ footer {
     color: #777;
 }
 
+
 /* Booking date and time fields */
+
+.field-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: 16px;
+	width: 100%;
+}
+
+.field-row > .field {
+	min-width: 0;
+	width: 100%;
+}
+
 #booking-date,
 #booking-time,
 #email {
-  width: 100%;
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+	box-sizing: border-box;
 }
 
 #booking-date,
 #booking-time {
-  min-height: 48px;
-  cursor: pointer;
+	min-height: 48px;
+	padding: 12px 10px;
+	font-size: 16px;
+	cursor: pointer;
 }
 
 #booking-time:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
+	opacity: 0.55;
+	cursor: not-allowed;
 }
 
 #booking-date:focus,
 #booking-time:focus,
 #email:focus {
-  outline: none;
+	outline: none;
+	border-color: var(--amber);
+}
+
+@media (max-width: 600px) {
+	.field-row {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 0;
+	}
+
+	.field-row > .field {
+		min-width: 0;
+		width: 100%;
+	}
+
+	#booking-date,
+	#booking-time {
+		width: 100%;
+		min-width: 0;
+		font-size: 16px;
+	}
 }
