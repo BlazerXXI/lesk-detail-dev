@@ -125,6 +125,13 @@ const selectedServices = new Map();
 const carTypeSelect = document.getElementById("carType");
 const carTypeFormSelect = document.getElementById("carTypeForm");
 const serviceSelect = document.getElementById("service");
+// Multi-select services
+const serviceCheckboxes = document.getElementById("service-checkboxes");
+const serviceDropdown = document.getElementById("service-dropdown");
+const serviceDropdownTrigger = document.getElementById(
+	"service-dropdown-trigger",
+);
+const serviceDropdownLabel = document.getElementById("service-dropdown-label");
 
 // Synchronize vehicle selectors
 function syncCarTypeOptions() {
@@ -139,8 +146,20 @@ function syncCarTypeOptions() {
 	carTypeFormSelect.value = selectedValue;
 }
 
-const formatPrice = (price) => `${price.toLocaleString("cs-CZ")} Kč`;
+const formatPrice = (price) =>
+	!price
+		? '<a href="#ceny">Vyberte si svou první službu</a>'
+		: `${price.toLocaleString("cs-CZ")} Kč`;
 
+const formatStartingPrice = (price) =>
+	!price
+		? '<a href="#ceny">Vyberte si svou první službu</a>'
+		: `od ${price.toLocaleString("cs-CZ")} Kč`;
+
+// Round final prices to the nearest 100 CZK
+function roundPrice(price) {
+	return Math.round(price / 100) * 100;
+}
 function getCarMultiplier() {
 	const option = carTypeSelect?.selectedOptions[0];
 
@@ -157,7 +176,7 @@ function getPricedServices() {
 
 	return Array.from(selectedServices.values()).map((service) => ({
 		...service,
-		finalPrice: Math.round(service.price * multiplier),
+		finalPrice: roundPrice(service.price * multiplier),
 	}));
 }
 
@@ -173,7 +192,7 @@ function updateTotalPrice() {
 	const totalElement = document.getElementById("total-price");
 
 	if (totalElement) {
-		totalElement.textContent = formatPrice(total);
+		totalElement.innerHTML = formatPrice(total);
 	}
 
 	const selectedElement = document.getElementById("selected-services");
@@ -197,9 +216,9 @@ function updateTotalPrice() {
 		.querySelectorAll(".price-amount[data-base-price]")
 		.forEach((element) => {
 			const basePrice = Number(element.dataset.basePrice);
-			const finalPrice = Math.round(basePrice * getCarMultiplier());
+			const finalPrice = roundPrice(basePrice * getCarMultiplier());
 
-			element.innerHTML = `${formatPrice(finalPrice)}`;
+			element.innerHTML = formatStartingPrice(finalPrice);
 		});
 
 	// Update prices in the form service select
@@ -208,13 +227,123 @@ function updateTotalPrice() {
 			if (!option.dataset.price) return;
 
 			const basePrice = Number(option.dataset.price);
-			const finalPrice = Math.round(basePrice * getCarMultiplier());
+			const finalPrice = roundPrice(basePrice * getCarMultiplier());
 
-			option.textContent = `${option.dataset.name} — ${formatPrice(finalPrice)}`;
+			option.textContent = `${option.dataset.name} — ${formatStartingPrice(finalPrice)}`;
 		});
 	}
 
+	syncServiceCheckboxes();
+
 	return total;
+}
+
+// Render service checkboxes
+function renderServiceCheckboxes() {
+	if (!serviceCheckboxes) return;
+
+	serviceCheckboxes.innerHTML = catalog
+		.filter((item) => item.active)
+		.map(
+			(item) => `
+            <label class="service-checkbox">
+                <input
+                    type="checkbox"
+                    value="${item.id}"
+                    data-name="${item.name}"
+                    data-price="${item.price}"
+                    ${selectedServices.has(item.id) ? "checked" : ""}
+                >
+
+                <span>
+                    <strong>${item.name}</strong>
+                    <small>${formatStartingPrice(
+											roundPrice(item.price * getCarMultiplier()),
+										)}</small>
+                </span>
+            </label>
+        `,
+		)
+		.join("");
+
+	updateServiceDropdownLabel();
+}
+
+// Synchronize checkboxes with selectedServices
+
+function syncServiceCheckboxes() {
+	if (!serviceCheckboxes) return;
+
+	serviceCheckboxes
+		.querySelectorAll('input[type="checkbox"]')
+		.forEach((input) => {
+			input.checked = selectedServices.has(input.value);
+
+			const service = catalog.find((item) => item.id === input.value);
+			const priceElement = input.closest("label")?.querySelector("small");
+
+			if (service && priceElement) {
+				priceElement.innerHTML = formatStartingPrice(
+					roundPrice(service.price * getCarMultiplier()),
+				);
+			}
+		});
+
+	updateServiceDropdownLabel();
+}
+
+// Update dropdown label
+function updateServiceDropdownLabel() {
+	if (!serviceDropdownLabel) return;
+
+	const count = selectedServices.size;
+
+	serviceDropdownLabel.textContent = count
+		? `Vybrané služby (${count})`
+		: "Vyberte služby";
+}
+
+// Handle checkbox changes
+if (serviceCheckboxes) {
+	serviceCheckboxes.addEventListener("change", (event) => {
+		const input = event.target;
+
+		if (input.type !== "checkbox") return;
+
+		const id = input.value;
+
+		if (input.checked) {
+			selectedServices.set(id, {
+				id,
+				name: input.dataset.name,
+				price: Number(input.dataset.price) || 0,
+			});
+		} else {
+			selectedServices.delete(id);
+		}
+
+		updateTotalPrice();
+		syncSelectedButtons();
+		updateServiceDropdownLabel();
+	});
+}
+
+// Open / close dropdown
+if (serviceDropdownTrigger && serviceDropdown) {
+	serviceDropdownTrigger.addEventListener("click", () => {
+		const isOpen = !serviceDropdown.hidden;
+
+		serviceDropdown.hidden = isOpen;
+
+		serviceDropdownTrigger.setAttribute("aria-expanded", String(!isOpen));
+	});
+
+	document.addEventListener("click", (event) => {
+		if (!event.target.closest("#service-multiselect")) {
+			serviceDropdown.hidden = true;
+			serviceDropdownTrigger.setAttribute("aria-expanded", "false");
+		}
+	});
 }
 
 // Select or deselect a service
@@ -231,6 +360,11 @@ function toggleService(id, name, price) {
 
 	updateTotalPrice();
 	syncSelectedButtons();
+	syncServiceCheckboxes();
+
+	if (typeof loadBookingSlots === "function") {
+		loadBookingSlots();
+	}
 }
 
 // Update buttons on service cards
@@ -321,20 +455,7 @@ fetch("./data.json")
 		syncCarTypeOptions();
 
 		// SERVICES IN CONTACT FORM
-		if (serviceSelect) {
-			catalog
-				.filter((item) => item.active)
-				.forEach((item) => {
-					const option = document.createElement("option");
-
-					option.value = item.id;
-					option.textContent = `${item.name} — ${item.price} Kč`;
-					option.dataset.name = item.name;
-					option.dataset.price = item.price;
-
-					serviceSelect.appendChild(option);
-				});
-		}
+		renderServiceCheckboxes();
 
 		// FEATURES SECTION
 		const featuresContainer = document.querySelector("#svc");
@@ -384,7 +505,7 @@ fetch("./data.json")
                                 class="price-amount"
                                 data-base-price="${item.price}"
                             >
-                                ${formatPrice(item.price)}
+${formatStartingPrice(item.price)}
                             </div>
 
                             <p class="price-desc">${item.description}</p>
@@ -606,67 +727,277 @@ if (mapElement && typeof L !== "undefined") {
 	}, 300);
 }
 
-// Contact form -> mailto
+// ========================================
+// GOOGLE CALENDAR — AVAILABLE BOOKING SLOTS
+// ========================================
+
+const BOOKING_API_URL =
+	"https://script.google.com/macros/s/AKfycbxSXG1RVhQYMCFbKREmOlVHzxAgDe01XtoxzgYrQ-CaOnjHLrE4td18Gc5MtgrmBIC4/exec";
+
+const bookingDate = document.getElementById("booking-date");
+const bookingTime = document.getElementById("booking-time");
+
+let slotsRequestId = 0;
+
+async function loadBookingSlots() {
+	if (!bookingDate || !bookingTime) return;
+
+	const date = bookingDate.value;
+	const carTypeId = carTypeFormSelect?.value || "";
+	const serviceIds = Array.from(selectedServices.keys());
+
+	bookingTime.replaceChildren();
+
+	if (!date || !carTypeId || serviceIds.length === 0) {
+		bookingTime.disabled = true;
+
+		const option = document.createElement("option");
+		option.value = "";
+		option.textContent = "Vyberte datum, vozidlo a služby";
+		bookingTime.appendChild(option);
+
+		return;
+	}
+
+	const requestId = ++slotsRequestId;
+
+	bookingTime.disabled = true;
+
+	const loadingOption = document.createElement("option");
+	loadingOption.textContent = "Načítáme volné termíny...";
+	bookingTime.appendChild(loadingOption);
+
+	try {
+		const params = new URLSearchParams({
+			action: "slots",
+			date: date,
+			serviceIds: JSON.stringify(serviceIds),
+			carTypeId: carTypeId,
+		});
+
+		const response = await fetch(`${BOOKING_API_URL}?${params.toString()}`);
+
+		if (!response.ok) {
+			throw new Error("Nepodařilo se načíst termíny.");
+		}
+
+		const result = await response.json();
+
+		if (requestId !== slotsRequestId) return;
+
+		if (!result.success) {
+			throw new Error(result.error || "Chyba při načítání termínů.");
+		}
+
+		bookingTime.replaceChildren();
+
+		const firstOption = document.createElement("option");
+		firstOption.value = "";
+		firstOption.textContent = result.data.length
+			? "Vyberte čas"
+			: "Žádné volné termíny";
+
+		bookingTime.appendChild(firstOption);
+
+		result.data.forEach((slot) => {
+			const option = document.createElement("option");
+
+			option.value = slot.start;
+			option.textContent = `${slot.start} – ${slot.end}`;
+
+			bookingTime.appendChild(option);
+		});
+
+		bookingTime.disabled = result.data.length === 0;
+	} catch (error) {
+		console.error("Booking slots error:", error);
+
+		if (requestId !== slotsRequestId) return;
+
+		bookingTime.replaceChildren();
+
+		const option = document.createElement("option");
+		option.value = "";
+		option.textContent = "Chyba načítání. Zkuste znovu.";
+
+		bookingTime.appendChild(option);
+		bookingTime.disabled = true;
+	}
+}
+
+if (bookingDate) {
+	bookingDate.addEventListener("change", loadBookingSlots);
+}
+
+// Reload slots when selected services change
+if (serviceCheckboxes) {
+	serviceCheckboxes.addEventListener("change", loadBookingSlots);
+}
+
+// Reload slots when vehicle class changes
+if (carTypeFormSelect) {
+	carTypeFormSelect.addEventListener("change", loadBookingSlots);
+}
+
+// Set minimum booking date to today
+if (bookingDate) {
+	const today = new Date();
+	const localToday = [
+		today.getFullYear(),
+		String(today.getMonth() + 1).padStart(2, "0"),
+		String(today.getDate()).padStart(2, "0"),
+	].join("-");
+
+	bookingDate.min = localToday;
+}
+
+// Contact form -> Formspree
+
 var form = document.getElementById("contact-form");
-var status = document.getElementById("form-status");
+var formStatus = document.getElementById("form-status");
+
+if (!formStatus) {
+	console.error("Element #form-status not found");
+}
+
+function showFormStatus(message) {
+	if (!formStatus) return;
+
+	formStatus.textContent = message;
+	formStatus.classList.add("show");
+}
+
 var citySelect = selectedCity;
 var placeInput = document.getElementById("place");
+
 if (citySelect && placeInput) {
 	placeInput.value = citySelect;
 }
 
 if (form) {
-	form.addEventListener("submit", function (ev) {
+	form.addEventListener("submit", async function (ev) {
 		ev.preventDefault();
-		var name = form.name.value.trim();
-		var phone = form.phone.value.trim();
-		var email = form.email.value.trim();
 
-		var selectedCar = carTypeSelect?.selectedOptions[0];
-		var carType = selectedCar ? selectedCar.textContent.trim() : "";
-		var service = getPricedServices()
-			.map((item) => `${item.name} — ${formatPrice(item.finalPrice)}`)
-			.join("\n");
-		var total = updateTotalPrice();
-
-		var place = form.place.value.trim();
-		var message = form.message.value.trim();
+		const name = form.elements.namedItem("name")?.value.trim() || "";
+		const phone = form.elements.namedItem("phone")?.value.trim() || "";
+		const email = form.elements.namedItem("email")?.value.trim() || "";
+		const date = bookingDate?.value || "";
+		const time = bookingTime?.value || "";
+		const carTypeId = carTypeFormSelect?.value || "";
+		const place = placeInput?.value.trim() || "";
+		const message = form.elements.namedItem("message")?.value.trim() || "";
+		const serviceIds = Array.from(selectedServices.keys());
 
 		if (!name || !phone) {
-			status.textContent =
-				"Vyplňte prosím jméno a telefon, abychom se vám mohli ozvat.";
-			status.classList.add("show");
+			showFormStatus("Vyplňte prosím jméno a telefon.");
 			return;
 		}
 
-		var subject =
-			"Poptávka detailing — " + name + (carType ? " (" + carType + ")" : "");
-		var body = [
-			"Jméno: " + name,
-			"Telefon: " + phone,
-			email ? "E-mail: " + email : "",
-			carType ? "Třída vozidla: " + carType : "",
-			"Vybrané služby:\n" + (service || "Nebyla vybrána žádná služba"),
-			"Celková cena: " + total + " Kč",
-			place ? "Místo výjezdu: " + place : "",
-			"",
-			message ? "Zpráva:" : "",
-			message,
-		]
-			.filter(function (l) {
-				return l !== "";
-			})
-			.join("\n");
+		if (!carTypeId) {
+			showFormStatus("Vyberte prosím třídu vozidla.");
+			return;
+		}
 
-		var href =
-			"mailto:info@leskdetail.cz?subject=" +
-			encodeURIComponent(subject) +
-			"&body=" +
-			encodeURIComponent(body);
-		window.location.href = href;
+		if (serviceIds.length === 0) {
+			showFormStatus("Vyberte prosím alespoň jednu službu.");
+			return;
+		}
 
-		status.textContent =
-			"Otevíráme váš e-mailový klient s předvyplněnou poptávkou. Pokud se neotevřel, napište nám přímo na info@leskdetail.cz nebo zavolejte na +420 734 676 271.";
-		status.classList.add("show");
+		if (!date || !time) {
+			showFormStatus("Vyberte prosím datum a volný čas rezervace.");
+			return;
+		}
+
+		const note = [place ? "Místo výjezdu: " + place : "", message]
+			.filter(Boolean)
+			.join("\n\n");
+
+		const payload = {
+			name: name,
+			phone: phone,
+			email: email,
+			vehicle: "",
+			note: note,
+			date: date,
+			time: time,
+			serviceIds: serviceIds,
+			carTypeId: carTypeId,
+		};
+
+		const submitButton = form.querySelector('[type="submit"]');
+
+		if (submitButton) {
+			submitButton.disabled = true;
+		}
+
+		showFormStatus("Odesíláme žádost o rezervaci...");
+
+		try {
+			const response = await fetch(BOOKING_API_URL, {
+				method: "POST",
+				headers: {
+					"Content-Type": "text/plain;charset=utf-8",
+				},
+				body: JSON.stringify(payload),
+			});
+
+			if (!response.ok) {
+				throw new Error("HTTP error: " + response.status);
+			}
+
+			const result = await response.json();
+
+			if (!result.success) {
+				throw new Error(result.error || "Rezervaci se nepodařilo vytvořit.");
+			}
+
+			showFormStatus(
+				"Děkujeme! Vaše rezervace byla přijata. Termín je dočasně blokován na 12 hodin a čeká na naše potvrzení.",
+			);
+
+			form.reset();
+			selectedServices.clear();
+
+			if (carTypeSelect) {
+				carTypeSelect.value = "";
+			}
+
+			syncCarTypeOptions();
+			updateTotalPrice();
+			syncSelectedButtons();
+
+			if (citySelect && placeInput) {
+				placeInput.value = citySelect;
+			}
+
+			if (bookingTime) {
+				bookingTime.replaceChildren();
+				const option = document.createElement("option");
+				option.value = "";
+				option.textContent = "Nejprve vyberte datum";
+				bookingTime.appendChild(option);
+				bookingTime.disabled = true;
+			}
+		} catch (error) {
+			console.error("Booking error:", error);
+
+			showFormStatus(
+				"Rezervaci se nepodařilo odeslat. " +
+					(error.message || "Zkuste to prosím znovu.") +
+					" Případně nám zavolejte na +420 734 676 271.",
+			);
+		} finally {
+			if (submitButton) {
+				submitButton.disabled = false;
+			}
+		}
 	});
 }
+
+window.addEventListener("error", function (e) {
+	alert("JS ERROR: " + e.message + "\nСтрока: " + e.lineno);
+});
+
+window.addEventListener("unhandledrejection", function (e) {
+	alert("PROMISE ERROR: " + e.reason);
+});
